@@ -180,7 +180,7 @@ export default function Home() {
                 Cửa hàng
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Bài viết PR
+                Sản phẩm
               </a>
               <a href="#" className="transition hover:text-slate-900">
                 Khuyến mãi
