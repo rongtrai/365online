@@ -332,22 +332,22 @@ export default function Home() {
                 <div>
                   <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-orange-200">
                     <Sparkles className="h-3.5 w-3.5" />
-                    Robot cho tương lai
+                    365online marketplace
                   </div>
                   <h1 className="max-w-xl text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    Nâng tầm sáng tạo với robot & kit AI
+                    Mua sắm thông minh cho công việc, học tập & sáng tạo
                   </h1>
                   <p className="mt-4 max-w-lg text-sm text-slate-300 sm:text-base">
-                    Khám phá robot học tập, kit phát triển, cảm biến và linh kiện chất lượng cao giúp dự án của bạn sống động hơn.
+                    Khám phá robot, cảm biến AI, thiết bị văn phòng và linh kiện kỹ thuật số được chọn lọc để giúp bạn làm việc nhanh hơn, sáng tạo tốt hơn và vận hành hiệu quả hơn.
                   </p>
 
                   <div className="mt-6 flex flex-wrap gap-3">
                     <a href="/products" className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-400">
-                      Khám phá ngay
+                      Mua ngay
                       <ArrowRight className="h-4 w-4" />
                     </a>
                     <a href="/products" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
-                      Xem khuyến mãi
+                      Xem ưu đãi
                     </a>
                   </div>
                 </div>
@@ -377,7 +377,14 @@ export default function Home() {
             </section>
 
             <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-5 grid gap-4 lg:grid-cols-[1fr_1fr_1fr_1fr]">
+              <div className="mb-3 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">Khám phá</p>
+                  <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900">Danh mục nổi bật</h2>
+                </div>
+                <a href="/products" className="text-sm font-semibold text-slate-700 hover:text-slate-900">Xem tất cả →</a>
+              </div>
+              <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_1fr]">
                 {categories.map((category) => (
                   <a
                     key={category.name}
