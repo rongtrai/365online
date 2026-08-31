@@ -247,39 +247,39 @@ export default function Home() {
                 </span>
               </button>
 
-              <button className="relative inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-slate-200 transition hover:bg-slate-800 sm:px-3.5">
+              <a href="/cart" className="relative inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-slate-200 transition hover:bg-slate-800 sm:px-3.5">
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
                 <span className="whitespace-nowrap">Giỏ hàng</span>
                 <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
                   {cartCount}
                 </span>
-              </button>
+              </a>
             </div>
           </div>
 
           <nav className="flex items-center justify-between gap-4 overflow-x-auto border-t border-slate-100 py-3 text-sm font-medium text-slate-600">
             <div className="flex items-center gap-6 whitespace-nowrap">
               <div className="group relative">
-                <a href="#" className="text-slate-900 underline decoration-orange-500 underline-offset-8">
+                <a href="/products" className="text-slate-900 underline decoration-orange-500 underline-offset-8">
                   Cửa hàng
                 </a>
                 <div className="invisible absolute left-0 top-full z-20 mt-3 w-72 rounded-2xl border border-slate-200 bg-white p-3 opacity-0 shadow-xl shadow-slate-200/70 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <div className="space-y-2 text-sm text-slate-700">
-                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Robot, Mô hình</a>
-                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Linh kiện, Thiết bị</a>
-                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Phụ kiện Robot</a>
-                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Kit phát triển</a>
-                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Tool, Code, Phần mềm</a>
+                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Robot, Mô hình</a>
+                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Linh kiện, Thiết bị</a>
+                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Phụ kiện Robot</a>
+                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Kit phát triển</a>
+                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Tool, Code, Phần mềm</a>
                   </div>
                 </div>
               </div>
-              <a href="#" className="transition hover:text-slate-900">
+              <a href="/products" className="transition hover:text-slate-900">
                 Tool, Code, Phần mềm
               </a>
-              <a href="#" className="transition hover:text-slate-900">
+              <a href="/products" className="transition hover:text-slate-900">
                 Bài viết chia sẻ
               </a>
-              <a href="#" className="transition hover:text-slate-900">
+              <a href="/products" className="transition hover:text-slate-900">
                 Khuyến mãi
               </a>
             </div>
@@ -338,13 +338,13 @@ export default function Home() {
                   </p>
 
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <button className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-400">
+                    <a href="/products" className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-400">
                       Khám phá ngay
                       <ArrowRight className="h-4 w-4" />
-                    </button>
-                    <button className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                    </a>
+                    <a href="/products" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
                       Xem khuyến mãi
-                    </button>
+                    </a>
                   </div>
                 </div>
 
@@ -455,10 +455,10 @@ export default function Home() {
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-500">SẢN PHẨM</p>
                   <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Khám phá thêm cho bạn</h2>
                 </div>
-                <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
                   Xem thêm
                   <ChevronRight className="h-4 w-4" />
-                </button>
+                </a>
               </div>
 
               <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
