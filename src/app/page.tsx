@@ -91,6 +91,81 @@ const products: Product[] = [
   },
 ];
 
+const catalogProducts: Product[] = [
+  {
+    id: 5,
+    name: "Loa Bluetooth Horizon Mini",
+    price: 179,
+    originalPrice: 249,
+    rating: 4.9,
+    badge: "HOT",
+    accent: "from-pink-500 via-rose-500 to-orange-500",
+  },
+  {
+    id: 6,
+    name: "Máy ảnh mini PixelGo",
+    price: 329,
+    originalPrice: 449,
+    rating: 4.8,
+    badge: "NEW",
+    accent: "from-indigo-500 via-purple-500 to-violet-600",
+  },
+  {
+    id: 7,
+    name: "Bàn phím cơ KeyPad X",
+    price: 219,
+    originalPrice: 299,
+    rating: 4.7,
+    badge: "-15%",
+    accent: "from-slate-700 via-slate-800 to-slate-900",
+  },
+  {
+    id: 8,
+    name: "Ghế làm việc FlexSeat",
+    price: 259,
+    originalPrice: 349,
+    rating: 4.6,
+    badge: "MỚI",
+    accent: "from-cyan-500 via-teal-500 to-emerald-600",
+  },
+  {
+    id: 9,
+    name: "Màn hình văn phòng ViewMax",
+    price: 489,
+    originalPrice: 629,
+    rating: 4.9,
+    badge: "-20%",
+    accent: "from-blue-500 via-cyan-500 to-sky-600",
+  },
+  {
+    id: 10,
+    name: "Đèn LED Trang trí NeoGlow",
+    price: 79,
+    originalPrice: 119,
+    rating: 4.5,
+    badge: "HOT",
+    accent: "from-yellow-400 via-orange-400 to-red-500",
+  },
+  {
+    id: 11,
+    name: "Camera an ninh LiteCam",
+    price: 299,
+    originalPrice: 389,
+    rating: 4.8,
+    badge: "NEW",
+    accent: "from-sky-500 via-indigo-500 to-violet-600",
+  },
+  {
+    id: 12,
+    name: "Túi chống nước DriftPack",
+    price: 109,
+    originalPrice: 159,
+    rating: 4.7,
+    badge: "-10%",
+    accent: "from-emerald-500 via-green-500 to-lime-500",
+  },
+];
+
 const articles = [
   {
     title: "Cách các thương hiệu biến sự kiện ra mắt thành khoảnh khắc truyền thông",
@@ -317,6 +392,75 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {products.map((product) => {
+              const isSaved = wishlistIds.includes(product.id);
+
+              return (
+                <article
+                  key={product.id}
+                  className="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                >
+                  <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                    <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                      <div className="flex h-full items-start justify-between">
+                        <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                          {product.badge}
+                        </div>
+                        <button
+                          aria-label={`Toggle wishlist for ${product.name}`}
+                          onClick={() => toggleWishlist(product.id)}
+                          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                        >
+                          <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-1 text-amber-400">
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                      ))}
+                      <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                    </div>
+
+                    <div className="mt-3 flex items-end justify-between gap-2">
+                      <div>
+                        <span className="text-xl font-black text-slate-900">${product.price}</span>
+                        <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                      </div>
+                      <button
+                        onClick={addToCart}
+                        className="inline-flex items-center justify-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                      >
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-500">SẢN PHẨM</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Khám phá thêm cho bạn</h2>
+            </div>
+            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+              Xem thêm
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {catalogProducts.map((product) => {
               const isSaved = wishlistIds.includes(product.id);
 
               return (
