@@ -135,14 +135,11 @@ export default function Home() {
               </button>
 
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-rose-500 to-pink-500 text-[10px] font-black tracking-[-0.08em] text-white shadow-lg shadow-orange-200">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 via-pink-500 to-orange-400 text-[9px] font-black tracking-[-0.12em] text-white shadow-lg shadow-orange-200">
                   365
                 </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    365online
-                  </p>
-                  <p className="text-lg font-black tracking-tight text-slate-900">365online</p>
+                <div className="leading-none">
+                  <p className="text-xl font-black tracking-[-0.06em] text-slate-900">365online</p>
                 </div>
               </div>
             </div>
@@ -429,12 +426,11 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
             <div>
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-rose-500 to-pink-500 text-lg font-bold text-white shadow-lg shadow-orange-900/30">
-                  N
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 via-pink-500 to-orange-400 text-[9px] font-black tracking-[-0.12em] text-white shadow-lg shadow-orange-900/30">
+                  365
                 </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">NTA Store</p>
-                  <p className="text-xl font-black text-white">NovaCart</p>
+                <div className="leading-none">
+                  <p className="text-xl font-black tracking-[-0.06em] text-white">365online</p>
                 </div>
               </div>
 
@@ -508,10 +504,10 @@ export default function Home() {
           </div>
 
           <div className="mt-10 flex flex-col gap-4 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 NovaCart. Mọi quyền được bảo lưu.</p>
+            <p>© 2026 365online. Mọi quyền được bảo lưu.</p>
             <div className="flex items-center gap-5">
               <span className="flex items-center gap-2"><CreditCard className="h-4 w-4" /> Thanh toán an toàn</span>
-              <span>support@novacart.com</span>
+              <span>support@365online.com</span>
             </div>
           </div>
         </div>
