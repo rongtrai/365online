@@ -247,6 +247,10 @@ export default function Home() {
                 </span>
               </button>
 
+              <a href="/login" className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                Đăng nhập
+              </a>
+
               <a href="/cart" className="relative inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-slate-200 transition hover:bg-slate-800 sm:px-3.5">
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
                 <span className="whitespace-nowrap">Giỏ hàng</span>
