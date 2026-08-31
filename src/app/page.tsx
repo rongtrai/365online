@@ -247,10 +247,10 @@ export default function Home() {
                 </span>
               </button>
 
-              <button className="relative inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-slate-200 transition hover:bg-slate-800 sm:px-4">
-                <ShoppingCart className="h-4 w-4" />
-                <span className="hidden sm:inline">Giỏ hàng</span>
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
+              <button className="relative inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-slate-200 transition hover:bg-slate-800 sm:px-3.5">
+                <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
+                <span className="whitespace-nowrap">Giỏ hàng</span>
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
                   {cartCount}
                 </span>
               </button>
