@@ -167,11 +167,11 @@ const catalogProducts: Product[] = [
 ];
 
 const categories = [
-  { name: "Smart Home", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
-  { name: "Audio", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
-  { name: "Wearables", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
-  { name: "Lighting", count: "12 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
-  { name: "Travel", count: "10 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
+  { name: "Robot & Tự động hóa", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
+  { name: "Dụng cụ hàn", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
+  { name: "Máy khoan", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
+  { name: "Linh kiện điện tử", count: "32 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
+  { name: "Dây điện & Kết nối", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
 ];
 
 const articles = [
@@ -263,13 +263,19 @@ export default function Home() {
                 Cửa hàng
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Sản phẩm
+                Robot
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Khuyến mãi
+                Dụng cụ hàn
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Bán chạy nhất
+                Máy khoan
+              </a>
+              <a href="#" className="transition hover:text-slate-900">
+                Linh kiện
+              </a>
+              <a href="#" className="transition hover:text-slate-900">
+                Dây điện
               </a>
             </div>
             <div className="hidden items-center gap-4 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 md:flex">
