@@ -166,6 +166,14 @@ const catalogProducts: Product[] = [
   },
 ];
 
+const categories = [
+  { name: "Smart Home", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
+  { name: "Audio", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
+  { name: "Wearables", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
+  { name: "Lighting", count: "12 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
+  { name: "Travel", count: "10 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
+];
+
 const articles = [
   {
     title: "Cách các thương hiệu biến sự kiện ra mắt thành khoảnh khắc truyền thông",
@@ -513,6 +521,43 @@ export default function Home() {
                 </article>
               );
             })}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">DANH MỤC</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Danh mục nổi bật</h2>
+            </div>
+            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+              Xem tất cả
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {categories.map((category) => (
+              <button
+                key={category.name}
+                className="group overflow-hidden rounded-[22px] border border-slate-200 bg-white p-0 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+              >
+                <div className={`relative h-28 bg-gradient-to-br ${category.accent} p-4`}>
+                  <div className="flex h-full items-start justify-between">
+                    <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur-sm">
+                      Hot
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-lg text-white backdrop-blur-sm">
+                      →
+                    </span>
+                  </div>
+                </div>
+                <div className="px-4 py-4">
+                  <p className="text-lg font-black text-slate-900">{category.name}</p>
+                  <p className="mt-1 text-sm text-slate-500">{category.count}</p>
+                </div>
+              </button>
+            ))}
           </div>
         </section>
 
