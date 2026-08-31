@@ -7,6 +7,16 @@ export type StorefrontCategory = {
   accent?: string;
 };
 
+export type StorefrontOrder = {
+  id: number;
+  customerName: string;
+  phone: string;
+  address: string;
+  status: string;
+  total: number;
+  createdAt: string;
+};
+
 const mapProduct = (row: Record<string, unknown>): MockProduct => ({
   id: Number(row.id ?? 0),
   name: String(row.name ?? "Unnamed product"),
@@ -25,6 +35,16 @@ const mapCategory = (row: Record<string, unknown>): StorefrontCategory => ({
   name: String(row.name ?? "Khác"),
   count: Number(row.count ?? row.product_count ?? 0),
   accent: String(row.accent ?? "from-slate-700 via-slate-800 to-slate-900"),
+});
+
+const mapOrder = (row: Record<string, unknown>): StorefrontOrder => ({
+  id: Number(row.id ?? 0),
+  customerName: String(row.customer_name ?? row.customerName ?? "Khách hàng"),
+  phone: String(row.phone ?? ""),
+  address: String(row.address ?? ""),
+  status: String(row.status ?? "pending"),
+  total: Number(row.total ?? 0),
+  createdAt: String(row.created_at ?? row.createdAt ?? new Date().toISOString()),
 });
 
 export async function getCategories(): Promise<StorefrontCategory[]> {
@@ -49,6 +69,18 @@ export async function getProducts(): Promise<MockProduct[]> {
   }
 
   return data.map(mapProduct);
+}
+
+export async function getOrders(): Promise<StorefrontOrder[]> {
+  if (!supabase) return [];
+
+  const { data, error } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
+
+  if (error || !data || data.length === 0) {
+    return [];
+  }
+
+  return data.map(mapOrder);
 }
 
 export async function getProductById(id: number): Promise<MockProduct | null> {

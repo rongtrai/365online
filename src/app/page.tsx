@@ -19,19 +19,13 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { create } from "zustand";
+import { useCartStore } from "@/lib/cart-store";
 
 const useShopStore = create<{
-  cartCount: number;
   wishlistIds: number[];
-  addToCart: () => void;
   toggleWishlist: (id: number) => void;
 }>((set) => ({
-  cartCount: 3,
   wishlistIds: [1, 4],
-  addToCart: () =>
-    set((state) => ({
-      cartCount: state.cartCount + 1,
-    })),
   toggleWishlist: (id: number) =>
     set((state) => {
       const wishlistIds = state.wishlistIds.includes(id)
@@ -202,10 +196,10 @@ const articles = [
 ];
 
 export default function Home() {
-  const cartCount = useShopStore((state) => state.cartCount);
+  const cartCount = useCartStore((state) => state.itemCount);
   const wishlistIds = useShopStore((state) => state.wishlistIds);
-  const addToCart = useShopStore((state) => state.addToCart);
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
+  const addToCart = useCartStore((state) => state.addItem);
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -431,7 +425,17 @@ export default function Home() {
                               <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
                             </div>
                             <button
-                              onClick={addToCart}
+                              onClick={() =>
+                                addToCart({
+                                  id: product.id,
+                                  name: product.name,
+                                  price: product.price,
+                                  originalPrice: product.originalPrice,
+                                  badge: product.badge,
+                                  accent: product.accent,
+                                  category: "Robot, Mô hình",
+                                })
+                              }
                               className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
                             >
                               Thêm vào giỏ
@@ -508,7 +512,17 @@ export default function Home() {
                               <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
                             </div>
                             <button
-                              onClick={addToCart}
+                              onClick={() =>
+                                addToCart({
+                                  id: product.id,
+                                  name: product.name,
+                                  price: product.price,
+                                  originalPrice: product.originalPrice,
+                                  badge: product.badge,
+                                  accent: product.accent,
+                                  category: "Robot, Mô hình",
+                                })
+                              }
                               className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
                             >
                               Thêm vào giỏ

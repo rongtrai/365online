@@ -2,21 +2,37 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
-const stats = [
-  { label: "Doanh thu", value: "128,4Mđ", change: "+18.2%" },
-  { label: "Đơn hàng", value: "1,284", change: "+9.8%" },
-  { label: "Khách hàng", value: "8,490", change: "+12.4%" },
-  { label: "Tỷ lệ chuyển đổi", value: "4.6%", change: "+0.9%" },
-];
+type ProductItem = {
+  id: number;
+  name: string;
+  category: string;
+  stock: number;
+  price: number;
+  slug: string;
+  description: string;
+  badge: string;
+  accent: string;
+  originalPrice: number;
+  rating: number;
+};
 
-const recentOrders = [
-  { id: "#1024", customer: "Linh Nguyễn", total: "249.000đ", status: "Đang giao" },
-  { id: "#1025", customer: "Minh Huy", total: "119.000đ", status: "Hoàn tất" },
-  { id: "#1026", customer: "Phương Anh", total: "89.000đ", status: "Chờ xử lý" },
-  { id: "#1027", customer: "Quang Vũ", total: "329.000đ", status: "Hoàn tất" },
+type OrderItem = {
+  id: number;
+  customerName: string;
+  phone: string;
+  address: string;
+  status: string;
+  total: number;
+  createdAt: string;
+};
+
+const demoOrders: OrderItem[] = [
+  { id: 1024, customerName: "Linh Nguyễn", phone: "0909 123 456", address: "HCM", status: "Đang giao", total: 249000, createdAt: new Date().toISOString() },
+  { id: 1025, customerName: "Minh Huy", phone: "0912 111 222", address: "Đà Nẵng", status: "Hoàn tất", total: 119000, createdAt: new Date().toISOString() },
+  { id: 1026, customerName: "Phương Anh", phone: "0987 654 321", address: "Hà Nội", status: "Chờ xử lý", total: 89000, createdAt: new Date().toISOString() },
 ];
 
 const lowStock = [
@@ -25,12 +41,17 @@ const lowStock = [
   { name: "Kit AI Starter", stock: 6 },
 ];
 
-const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(value * 1000) + "đ";
+const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(value) + "đ";
 
 export default function AdminPage() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [liveProducts, setLiveProducts] = useState<Array<{ id: number; name: string; category: string; stock: number; price: number }>>([]);
+  const [liveProducts, setLiveProducts] = useState<ProductItem[]>([]);
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [form, setForm] = useState({ name: "", price: "", stock: "", category: "Robot, Mô hình", description: "" });
+  const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -51,19 +72,28 @@ export default function AdminPage() {
       }
     };
 
-    const loadProducts = async () => {
+    const loadData = async () => {
       try {
-        const res = await fetch("/api/products");
-        if (!res.ok) return;
-        const data = await res.json();
-        setLiveProducts(Array.isArray(data) ? data.slice(0, 5) : []);
+        const [productsRes, ordersRes] = await Promise.all([fetch("/api/products"), fetch("/api/orders")]);
+        if (productsRes.ok) {
+          const productsData = await productsRes.json();
+          setLiveProducts(Array.isArray(productsData) ? productsData.slice(0, 8) : []);
+        }
+
+        if (ordersRes.ok) {
+          const ordersData = await ordersRes.json();
+          setOrders(Array.isArray(ordersData) && ordersData.length > 0 ? ordersData : demoOrders);
+        } else {
+          setOrders(demoOrders);
+        }
       } catch {
         setLiveProducts([]);
+        setOrders(demoOrders);
       }
     };
 
     checkAccess();
-    loadProducts();
+    loadData();
   }, [router]);
 
   const handleLogout = () => {
@@ -73,6 +103,104 @@ export default function AdminPage() {
     localStorage.removeItem("365online_demo_user");
     router.push("/login");
   };
+
+  const resetForm = () => {
+    setForm({ name: "", price: "", stock: "", category: "Robot, Mô hình", description: "" });
+    setEditingProductId(null);
+  };
+
+  const handleSubmitProduct = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSaving(true);
+    setError("");
+
+    try {
+      const payload = {
+        name: form.name,
+        price: Number(form.price),
+        stock: Number(form.stock),
+        category: form.category,
+        description: form.description,
+        badge: "NEW",
+        accent: "from-slate-700 via-slate-800 to-slate-900",
+      };
+
+      const response = editingProductId
+        ? await fetch(`/api/products/${editingProductId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+        : await fetch("/api/products", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || (editingProductId ? "Không thể cập nhật sản phẩm." : "Không thể thêm sản phẩm."));
+      }
+
+      resetForm();
+      const refreshed = await fetch("/api/products");
+      if (refreshed.ok) {
+        const refreshedData = await refreshed.json();
+        setLiveProducts(Array.isArray(refreshedData) ? refreshedData.slice(0, 8) : []);
+      }
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : editingProductId ? "Không thể cập nhật sản phẩm." : "Không thể thêm sản phẩm.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditProduct = (product: ProductItem) => {
+    setEditingProductId(product.id);
+    setForm({
+      name: product.name,
+      price: String(product.price),
+      stock: String(product.stock),
+      category: product.category,
+      description: product.description,
+    });
+  };
+
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      await fetch(`/api/products/${id}`, { method: "DELETE" });
+      const refreshed = await fetch("/api/products");
+      if (refreshed.ok) {
+        const refreshedData = await refreshed.json();
+        setLiveProducts(Array.isArray(refreshedData) ? refreshedData.slice(0, 8) : []);
+      }
+    } catch {
+      setError("Không thể xóa sản phẩm.");
+    }
+  };
+
+  const handleOrderStatusChange = async (orderId: number, nextStatus: string) => {
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: nextStatus }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data?.error || "Không thể cập nhật trạng thái đơn hàng.");
+      }
+
+      setOrders((current) =>
+        current.map((order) => (order.id === orderId ? { ...order, status: nextStatus } : order))
+      );
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Không thể cập nhật trạng thái đơn hàng.");
+    }
+  };
+
+  const revenue = orders.reduce((sum, order) => sum + order.total, 0);
 
   if (!isLoggedIn) {
     return null;
@@ -90,25 +218,41 @@ export default function AdminPage() {
             <Link href="/" className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
               Về trang chủ
             </Link>
-            <button
-              onClick={handleLogout}
-              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
-            >
+            <button onClick={handleLogout} className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
               Đăng xuất
             </button>
           </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
-              <p className="text-sm text-slate-500">{stat.label}</p>
-              <div className="mt-3 flex items-end justify-between gap-3">
-                <h2 className="text-3xl font-black tracking-tight">{stat.value}</h2>
-                <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">{stat.change}</span>
-              </div>
+          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Doanh thu</p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <h2 className="text-3xl font-black tracking-tight">{formatMoney(revenue)}</h2>
+              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+18.2%</span>
             </div>
-          ))}
+          </div>
+          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Đơn hàng</p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <h2 className="text-3xl font-black tracking-tight">{orders.length}</h2>
+              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+9.8%</span>
+            </div>
+          </div>
+          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Khách hàng</p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <h2 className="text-3xl font-black tracking-tight">8,490</h2>
+              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+12.4%</span>
+            </div>
+          </div>
+          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Tỷ lệ chuyển đổi</p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <h2 className="text-3xl font-black tracking-tight">4.6%</h2>
+              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+0.9%</span>
+            </div>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
@@ -129,13 +273,22 @@ export default function AdminPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentOrders.map((order) => (
+                  {orders.map((order) => (
                     <tr key={order.id} className="border-t border-slate-200">
-                      <td className="px-4 py-3 font-semibold text-slate-900">{order.id}</td>
-                      <td className="px-4 py-3">{order.customer}</td>
-                      <td className="px-4 py-3">{order.total}</td>
+                      <td className="px-4 py-3 font-semibold text-slate-900">#{order.id}</td>
+                      <td className="px-4 py-3">{order.customerName}</td>
+                      <td className="px-4 py-3">{formatMoney(order.total)}</td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-orange-100 px-2.5 py-1 text-xs font-bold text-orange-700">{order.status}</span>
+                        <select
+                          value={order.status}
+                          onChange={(event) => handleOrderStatusChange(order.id, event.target.value)}
+                          className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-700 outline-none"
+                        >
+                          <option value="Chờ xử lý">Chờ xử lý</option>
+                          <option value="Đang giao">Đang giao</option>
+                          <option value="Hoàn tất">Hoàn tất</option>
+                          <option value="Hủy">Hủy</option>
+                        </select>
                       </td>
                     </tr>
                   ))}
@@ -163,7 +316,56 @@ export default function AdminPage() {
             </div>
 
             <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-black">Sản phẩm đang có</h2>
+              <h2 className="text-2xl font-black">Quản lý sản phẩm</h2>
+
+              <form onSubmit={handleSubmitProduct} className="mt-4 space-y-3">
+                <input
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                  placeholder="Tên sản phẩm"
+                  value={form.name}
+                  onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                    placeholder="Giá"
+                    inputMode="numeric"
+                    value={form.price}
+                    onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))}
+                  />
+                  <input
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                    placeholder="Tồn kho"
+                    inputMode="numeric"
+                    value={form.stock}
+                    onChange={(event) => setForm((current) => ({ ...current, stock: event.target.value }))}
+                  />
+                </div>
+                <input
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                  placeholder="Phân loại"
+                  value={form.category}
+                  onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}
+                />
+                <textarea
+                  className="min-h-[80px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                  placeholder="Mô tả"
+                  value={form.description}
+                  onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
+                />
+                {error ? <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{error}</div> : null}
+                <div className="flex gap-2">
+                  <button type="submit" disabled={saving} className="flex-1 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
+                    {saving ? "Đang lưu..." : editingProductId ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
+                  </button>
+                  {editingProductId ? (
+                    <button type="button" onClick={resetForm} className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700">
+                      Hủy
+                    </button>
+                  ) : null}
+                </div>
+              </form>
+
               <div className="mt-5 space-y-3">
                 {liveProducts.length === 0 ? (
                   <p className="text-sm text-slate-500">Đang tải dữ liệu sản phẩm...</p>
@@ -175,11 +377,19 @@ export default function AdminPage() {
                           <p className="truncate font-bold text-slate-900">{product.name}</p>
                           <p className="text-xs text-slate-500">{product.category}</p>
                         </div>
-                        <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">
-                          {product.stock} còn
-                        </span>
+                        <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">{product.stock} còn</span>
                       </div>
-                      <div className="mt-2 text-sm font-semibold text-slate-700">{formatMoney(product.price)}</div>
+                      <div className="mt-2 flex items-center justify-between gap-3">
+                        <span className="text-sm font-semibold text-slate-700">{formatMoney(product.price)}</span>
+                        <div className="flex gap-2">
+                          <button onClick={() => handleEditProduct(product)} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700">
+                            Sửa
+                          </button>
+                          <button onClick={() => handleDeleteProduct(product.id)} className="rounded-full border border-rose-200 bg-white px-2.5 py-1 text-[10px] font-bold text-rose-700">
+                            Xóa
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))
                 )}
