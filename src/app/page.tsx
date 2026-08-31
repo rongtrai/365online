@@ -140,9 +140,9 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                    NTA Store
+                    365online
                   </p>
-                  <p className="text-lg font-black tracking-tight text-slate-900">NovaCart</p>
+                  <p className="text-lg font-black tracking-tight text-slate-900">365online</p>
                 </div>
               </div>
             </div>
