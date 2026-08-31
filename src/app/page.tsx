@@ -293,19 +293,21 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-          <aside className="space-y-5">
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
+          <aside className="space-y-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
-              <ul className="mt-4 space-y-2 text-sm text-slate-700">
-                {categories.map((category) => (
-                  <li key={category.name}>
-                    <button className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900">
-                      <span>{category.name}</span>
-                      <span className="text-xs text-slate-400">({category.count.split(" ")[0]})</span>
-                    </button>
-                  </li>
-                ))}
+              <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
+                {categories
+                  .filter((category) => category.name !== "Tool, Code, Phần mềm")
+                  .map((category) => (
+                    <li key={category.name}>
+                      <button className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900">
+                        <span className="truncate">{category.name}</span>
+                        <span className="text-[10px] text-slate-400">({category.count.split(" ")[0]})</span>
+                      </button>
+                    </li>
+                  ))}
               </ul>
             </div>
 
@@ -479,7 +481,7 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-                {catalogProducts.slice(0, 4).map((product) => {
+                {catalogProducts.slice(0, 8).map((product) => {
                   const isSaved = wishlistIds.includes(product.id);
 
                   return (
