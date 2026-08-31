@@ -167,11 +167,11 @@ const catalogProducts: Product[] = [
 ];
 
 const categories = [
-  { name: "Robot học tập", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
-  { name: "Kit robot", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
-  { name: "Cảm biến robot", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
-  { name: "Servo & Motor", count: "32 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
-  { name: "Linh kiện robot", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
+  { name: "Robot, Mô hình", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
+  { name: "Linh kiện, Thiết bị", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
+  { name: "Phụ kiện Robot", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
+  { name: "Kit phát triển", count: "32 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
+  { name: "Tool, Code, Phần mềm", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
 ];
 
 const articles = [
@@ -259,23 +259,28 @@ export default function Home() {
 
           <nav className="flex items-center justify-between gap-4 overflow-x-auto border-t border-slate-100 py-3 text-sm font-medium text-slate-600">
             <div className="flex items-center gap-6 whitespace-nowrap">
-              <a href="#" className="text-slate-900 underline decoration-orange-500 underline-offset-8">
-                Cửa hàng
+              <div className="group relative">
+                <a href="#" className="text-slate-900 underline decoration-orange-500 underline-offset-8">
+                  Cửa hàng
+                </a>
+                <div className="invisible absolute left-0 top-full z-20 mt-3 w-72 rounded-2xl border border-slate-200 bg-white p-3 opacity-0 shadow-xl shadow-slate-200/70 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                  <div className="space-y-2 text-sm text-slate-700">
+                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Robot, Mô hình</a>
+                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Linh kiện, Thiết bị</a>
+                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Phụ kiện Robot</a>
+                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Kit phát triển</a>
+                    <a href="#" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Tool, Code, Phần mềm</a>
+                  </div>
+                </div>
+              </div>
+              <a href="#" className="transition hover:text-slate-900">
+                Tool, Code, Phần mềm
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Robot
+                Bài viết chia sẻ
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Kit robot
-              </a>
-              <a href="#" className="transition hover:text-slate-900">
-                Cảm biến
-              </a>
-              <a href="#" className="transition hover:text-slate-900">
-                Servo & Motor
-              </a>
-              <a href="#" className="transition hover:text-slate-900">
-                Linh kiện robot
+                Khuyến mãi
               </a>
             </div>
             <div className="hidden items-center gap-4 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 md:flex">
