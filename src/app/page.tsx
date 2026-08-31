@@ -293,332 +293,287 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.9)]">
-          <div className="grid gap-10 px-5 py-8 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-10">
-            <div className="flex flex-col justify-center">
-              <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-orange-200">
-                <Sparkles className="h-3.5 w-3.5" />
-                Sự kiện ra mắt mùa hè
-              </div>
-
-              <h1 className="max-w-xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Nâng tầm phong cách sống mỗi ngày
-              </h1>
-
-              <p className="mt-5 max-w-lg text-base text-slate-300 sm:text-lg">
-                Khám phá các sản phẩm công nghệ cao cấp, thiết bị hiện đại và ưu đãi độc quyền dành riêng cho bạn.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <button className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-400">
-                  Khám phá ngay
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <button className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                  Xem khuyến mãi
-                </button>
-              </div>
-
-              <div className="mt-8 grid max-w-lg grid-cols-3 gap-4">
-                {[
-                  ["Miễn phí vận chuyển", "Đơn hàng từ 1.500.000đ"],
-                  ["Bảo hành 2 năm", "Bao gồm"],
-                  ["Đánh giá 4.9/5", "Đã xác minh"],
-                ].map(([title, detail]) => (
-                  <div key={title} className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 backdrop-blur-sm">
-                    <p className="text-base font-bold text-white">{title}</p>
-                    <p className="mt-1 text-xs text-slate-300">{detail}</p>
-                  </div>
+        <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <aside className="space-y-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
+              <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                {categories.map((category) => (
+                  <li key={category.name}>
+                    <button className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900">
+                      <span>{category.name}</span>
+                      <span className="text-xs text-slate-400">({category.count.split(" ")[0]})</span>
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-xl overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-slate-950/40">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.35),transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.35),transparent_30%)]" />
+            <div className="rounded-2xl border border-slate-200 bg-slate-900 p-4 text-white shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-200">Hot</p>
+              <h3 className="mt-3 text-2xl font-black tracking-tight">Kit robot AI</h3>
+              <p className="mt-2 text-sm text-slate-300">Bộ phát triển cho học tập, demo và dự án maker.</p>
+              <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-400">
+                Khám phá
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
 
-                <div className="relative rounded-[22px] bg-gradient-to-br from-slate-200 via-white to-slate-100 p-4 shadow-inner">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Ưu đãi nổi bật</p>
-                      <p className="mt-1 text-xl font-black text-slate-900">Thiết lập nhà thông minh</p>
-                    </div>
-                    <div className="flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700">
-                      <BadgePercent className="h-3.5 w-3.5" />
-                      39% GIẢM
-                    </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Bộ lọc</p>
+              <div className="mt-4 space-y-3 text-sm text-slate-700">
+                <div>
+                  <p className="font-semibold text-slate-900">Giá</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-slate-100 px-2 py-1">Dưới 500k</span>
+                    <span className="rounded-full bg-slate-100 px-2 py-1">500k+</span>
                   </div>
-
-                  <div className="grid h-72 grid-cols-2 gap-4">
-                    <div className="rounded-[22px] bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-600 p-3 text-white shadow-lg shadow-blue-500/25">
-                      <div className="flex h-full flex-col justify-between">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100">Âm thanh</span>
-                          <Heart className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <p className="text-3xl font-black">3.999.000đ</p>
-                          <p className="text-sm text-cyan-100">Wireless Pro</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="rounded-[22px] bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-600 p-3 text-white shadow-lg shadow-violet-500/25">
-                      <div className="flex h-full flex-col justify-between">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-100">Đồng hồ</span>
-                          <Sparkles className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <p className="text-3xl font-black">5.999.000đ</p>
-                          <p className="text-sm text-violet-100">AeroWatch</p>
-                        </div>
-                      </div>
-                    </div>
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Loại</p>
+                  <div className="mt-2 space-y-2">
+                    <label className="flex items-center gap-2"><input type="checkbox" /> Robot học tập</label>
+                    <label className="flex items-center gap-2"><input type="checkbox" /> Lõi motor</label>
+                    <label className="flex items-center gap-2"><input type="checkbox" /> Cảm biến</label>
                   </div>
+                </div>
+              </div>
+            </div>
+          </aside>
 
-                  <div className="mt-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">Tiết kiệm khi mua bộ</p>
-                      <p className="text-xs text-slate-500">Tiết kiệm tới 4,5 triệu cho combo</p>
-                    </div>
-                    <button className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white">
-                      Mua trọn bộ
-                      <ChevronRight className="h-3.5 w-3.5" />
+          <div className="space-y-6">
+            <section className="overflow-hidden rounded-[24px] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-5 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.9)]">
+              <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                <div>
+                  <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-orange-200">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Robot cho tương lai
+                  </div>
+                  <h1 className="max-w-xl text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+                    Nâng tầm sáng tạo với robot & kit AI
+                  </h1>
+                  <p className="mt-4 max-w-lg text-sm text-slate-300 sm:text-base">
+                    Khám phá robot học tập, kit phát triển, cảm biến và linh kiện chất lượng cao giúp dự án của bạn sống động hơn.
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <button className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-400">
+                      Khám phá ngay
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                    <button className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                      Xem khuyến mãi
                     </button>
                   </div>
                 </div>
+
+                <div className="rounded-[22px] bg-gradient-to-br from-slate-200 via-white to-slate-100 p-4 shadow-inner">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-[20px] bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-600 p-4 text-white shadow-lg shadow-blue-500/20">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-100">Servo</span>
+                        <Heart className="h-4 w-4" />
+                      </div>
+                      <p className="mt-8 text-3xl font-black">3.999.000đ</p>
+                      <p className="text-sm text-cyan-100">Servo Pro</p>
+                    </div>
+
+                    <div className="rounded-[20px] bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-600 p-4 text-white shadow-lg shadow-violet-500/20">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-100">Cảm biến</span>
+                        <Sparkles className="h-4 w-4" />
+                      </div>
+                      <p className="mt-8 text-3xl font-black">5.999.000đ</p>
+                      <p className="text-sm text-violet-100">Vision Sensor</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        <section className="mt-8 flex min-h-[90px] items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-100 px-4 text-center text-sm font-medium text-slate-500 shadow-sm">
-          <span className="tracking-[0.12em] text-slate-400">Không gian quảng cáo / Google Ads</span>
-        </section>
+            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="mb-5 flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">NỔI BẬT</p>
+                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Sản phẩm bán chạy nhất</h2>
+                </div>
+                <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                  Xem tất cả
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
 
-        <section className="mt-10">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">NỔI BẬT</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Sản phẩm bán chạy nhất tuần</h2>
-            </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-              Xem tất cả
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
+              <div className="grid grid-cols-2 gap-4 xl:grid-cols-3">
+                {products.map((product) => {
+                  const isSaved = wishlistIds.includes(product.id);
 
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {products.map((product) => {
-              const isSaved = wishlistIds.includes(product.id);
-
-              return (
-                <article
-                  key={product.id}
-                  className="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
-                >
-                  <div className="relative overflow-hidden rounded-2xl bg-slate-100">
-                    <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                      <div className="flex h-full items-start justify-between">
-                        <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                          {product.badge}
+                  return (
+                    <article
+                      key={product.id}
+                      className="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                    >
+                      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                        <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                          <div className="flex h-full items-start justify-between">
+                            <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                              {product.badge}
+                            </div>
+                            <button
+                              aria-label={`Toggle wishlist for ${product.name}`}
+                              onClick={() => toggleWishlist(product.id)}
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                            >
+                              <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                            </button>
+                          </div>
                         </div>
-                        <button
-                          aria-label={`Toggle wishlist for ${product.name}`}
-                          onClick={() => toggleWishlist(product.id)}
-                          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
-                        >
-                          <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
-                        </button>
+                      </div>
+
+                      <div className="mt-4">
+                        <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
+
+                        <div className="mt-3 flex items-center gap-1 text-amber-400">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                          ))}
+                          <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                        </div>
+
+                        <div className="mt-3 flex items-end justify-between gap-2">
+                          <div>
+                            <span className="text-xl font-black text-slate-900">${product.price}</span>
+                            <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                          </div>
+                          <button
+                            onClick={addToCart}
+                            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                          >
+                            Thêm vào giỏ
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="rounded-[28px] border border-slate-200 bg-gradient-to-r from-orange-50 via-white to-sky-50 p-4 shadow-sm sm:p-6 lg:p-8">
+              <div className="flex min-h-[120px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-200 bg-white/70 text-center">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Tài trợ</p>
+                <p className="mt-2 text-lg font-bold text-slate-900 sm:text-xl">Banner quảng cáo robot & kit</p>
+                <p className="mt-1 text-sm text-slate-500">Vị trí quảng cáo giữa nội dung sản phẩm và bài viết chuyên mục</p>
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="mb-6 flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-500">SẢN PHẨM</p>
+                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Khám phá thêm cho bạn</h2>
+                </div>
+                <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                  Xem thêm
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+                {catalogProducts.slice(0, 4).map((product) => {
+                  const isSaved = wishlistIds.includes(product.id);
+
+                  return (
+                    <article
+                      key={product.id}
+                      className="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                    >
+                      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                        <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                          <div className="flex h-full items-start justify-between">
+                            <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                              {product.badge}
+                            </div>
+                            <button
+                              aria-label={`Toggle wishlist for ${product.name}`}
+                              onClick={() => toggleWishlist(product.id)}
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                            >
+                              <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4">
+                        <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
+
+                        <div className="mt-3 flex items-center gap-1 text-amber-400">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                          ))}
+                          <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                        </div>
+
+                        <div className="mt-3 flex items-end justify-between gap-2">
+                          <div>
+                            <span className="text-xl font-black text-slate-900">${product.price}</span>
+                            <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                          </div>
+                          <button
+                            onClick={addToCart}
+                            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                          >
+                            Thêm vào giỏ
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="mb-6 flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BÀI VIẾT</p>
+                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bài viết chia sẻ</h2>
+                </div>
+                <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                  Xem tất cả
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="grid gap-5 lg:grid-cols-3">
+                {articles.map((article) => (
+                  <article key={article.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+                    <div className={`relative h-52 bg-gradient-to-br ${article.accent} p-4`}>
+                      <div className="flex h-full items-start justify-between">
+                        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
+                          {article.category}
+                        </span>
+                        <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+                          {article.readTime}
+                        </span>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
-                    </div>
+                    <div className="p-5">
+                      <h3 className="text-xl font-bold leading-tight text-slate-900">{article.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">{article.excerpt}</p>
 
-                    <div className="mt-3 flex items-center gap-1 text-amber-400">
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
-                      ))}
-                      <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
-                    </div>
-
-                    <div className="mt-3 flex items-end justify-between gap-2">
-                      <div>
-                        <span className="text-xl font-black text-slate-900">${product.price}</span>
-                        <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
-                      </div>
-                      <button
-                        onClick={addToCart}
-                        className="inline-flex items-center justify-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
-                      >
-                        Thêm vào giỏ
+                      <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
+                        Đọc bài viết
+                        <ArrowRight className="h-4 w-4" />
                       </button>
                     </div>
-                  </div>
-                </article>
-              );
-            })}
+                  </article>
+                ))}
+              </div>
+            </section>
           </div>
-        </section>
-
-        <section className="mt-10">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-500">SẢN PHẨM</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Khám phá thêm cho bạn</h2>
-            </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-              Xem thêm
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {catalogProducts.map((product) => {
-              const isSaved = wishlistIds.includes(product.id);
-
-              return (
-                <article
-                  key={product.id}
-                  className="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
-                >
-                  <div className="relative overflow-hidden rounded-2xl bg-slate-100">
-                    <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                      <div className="flex h-full items-start justify-between">
-                        <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                          {product.badge}
-                        </div>
-                        <button
-                          aria-label={`Toggle wishlist for ${product.name}`}
-                          onClick={() => toggleWishlist(product.id)}
-                          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
-                        >
-                          <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
-                    </div>
-
-                    <div className="mt-3 flex items-center gap-1 text-amber-400">
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
-                      ))}
-                      <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
-                    </div>
-
-                    <div className="mt-3 flex items-end justify-between gap-2">
-                      <div>
-                        <span className="text-xl font-black text-slate-900">${product.price}</span>
-                        <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
-                      </div>
-                      <button
-                        onClick={addToCart}
-                        className="inline-flex items-center justify-center rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
-                      >
-                        Thêm vào giỏ
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mt-10">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">DANH MỤC</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Danh mục robot nổi bật</h2>
-            </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-              Xem tất cả
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {categories.map((category) => (
-              <button
-                key={category.name}
-                className="group overflow-hidden rounded-[22px] border border-slate-200 bg-white p-0 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
-              >
-                <div className={`relative h-28 bg-gradient-to-br ${category.accent} p-4`}>
-                  <div className="flex h-full items-start justify-between">
-                    <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur-sm">
-                      Hot
-                    </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-lg text-white backdrop-blur-sm">
-                      →
-                    </span>
-                  </div>
-                </div>
-                <div className="px-4 py-4">
-                  <p className="text-lg font-black text-slate-900">{category.name}</p>
-                  <p className="mt-1 text-sm text-slate-500">{category.count}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-10 rounded-[28px] border border-slate-200 bg-gradient-to-r from-orange-50 via-white to-sky-50 p-4 shadow-sm sm:p-6 lg:p-8">
-          <div className="flex min-h-[120px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-200 bg-white/70 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Tài trợ</p>
-            <p className="mt-2 text-lg font-bold text-slate-900 sm:text-xl">Banner quảng cáo tài trợ</p>
-            <p className="mt-1 text-sm text-slate-500">Vị trí quảng cáo giữa nội dung sản phẩm và bài viết chuyên mục</p>
-          </div>
-        </section>
-
-        <section className="mt-10">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BÀI VIẾT & TIN TỨC</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bài viết mới nhất & Câu chuyện sản phẩm</h2>
-            </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-              Xem tất cả bài viết
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="grid gap-5 lg:grid-cols-3">
-            {articles.map((article) => (
-              <article key={article.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
-                <div className={`relative h-52 bg-gradient-to-br ${article.accent} p-4`}>
-                  <div className="flex h-full items-start justify-between">
-                    <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                      {article.category}
-                    </span>
-                    <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
-                      {article.readTime}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-5">
-                  <h3 className="text-xl font-bold leading-tight text-slate-900">{article.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{article.excerpt}</p>
-
-                  <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
-                    Đọc bài viết
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        </div>
       </div>
 
       <footer className="mt-16 border-t border-slate-200 bg-slate-950 text-slate-200">
