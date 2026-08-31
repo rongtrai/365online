@@ -420,10 +420,10 @@ export default function Home() {
                           <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
                         </div>
 
-                        <div className="mt-3 flex items-end justify-between gap-2">
-                          <div className="min-w-0">
+                        <div className="mt-3 flex min-h-[42px] items-center justify-between gap-2">
+                          <div className="min-w-0 flex items-baseline gap-2">
                             <span className="text-xl font-black text-slate-900">${product.price}</span>
-                            <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                            <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
                           </div>
                           <button
                             onClick={addToCart}
@@ -495,10 +495,10 @@ export default function Home() {
                           <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
                         </div>
 
-                        <div className="mt-3 flex items-end justify-between gap-2">
-                          <div className="min-w-0">
+                        <div className="mt-3 flex min-h-[42px] items-center justify-between gap-2">
+                          <div className="min-w-0 flex items-baseline gap-2">
                             <span className="text-xl font-black text-slate-900">${product.price}</span>
-                            <span className="ml-2 text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                            <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
                           </div>
                           <button
                             onClick={addToCart}
