@@ -167,11 +167,11 @@ const catalogProducts: Product[] = [
 ];
 
 const categories = [
-  { name: "Robot & Tự động hóa", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
-  { name: "Dụng cụ hàn", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
-  { name: "Máy khoan", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
-  { name: "Linh kiện điện tử", count: "32 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
-  { name: "Dây điện & Kết nối", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
+  { name: "Robot học tập", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
+  { name: "Kit robot", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
+  { name: "Cảm biến robot", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
+  { name: "Servo & Motor", count: "32 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
+  { name: "Linh kiện robot", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
 ];
 
 const articles = [
@@ -266,16 +266,16 @@ export default function Home() {
                 Robot
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Dụng cụ hàn
+                Kit robot
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Máy khoan
+                Cảm biến
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Linh kiện
+                Servo & Motor
               </a>
               <a href="#" className="transition hover:text-slate-900">
-                Dây điện
+                Linh kiện robot
               </a>
             </div>
             <div className="hidden items-center gap-4 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 md:flex">
@@ -534,7 +534,7 @@ export default function Home() {
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">DANH MỤC</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Danh mục nổi bật</h2>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Danh mục robot nổi bật</h2>
             </div>
             <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
               Xem tất cả
