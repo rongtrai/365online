@@ -275,7 +275,11 @@ export default function AdminPage() {
                 <tbody>
                   {orders.map((order) => (
                     <tr key={order.id} className="border-t border-slate-200">
-                      <td className="px-4 py-3 font-semibold text-slate-900">#{order.id}</td>
+                      <td className="px-4 py-3 font-semibold text-slate-900">
+                        <Link href={`/orders/${order.id}`} className="text-slate-900 underline underline-offset-4 hover:text-orange-600">
+                          #{order.id}
+                        </Link>
+                      </td>
                       <td className="px-4 py-3">{order.customerName}</td>
                       <td className="px-4 py-3">{formatMoney(order.total)}</td>
                       <td className="px-4 py-3">

@@ -1,21 +1,82 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { getProductById, getProducts } from "@/lib/storefront-data";
+"use client";
 
-type ProductDetailPageProps = {
-  params: Promise<{ id: string }>;
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useCartStore } from "@/lib/cart-store";
+
+type ProductDetail = {
+  id: number;
+  name: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  badge: string;
+  accent: string;
+  description: string;
+  category: string;
+  stock: number;
 };
 
-export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { id } = await params;
-  const product = await getProductById(Number(id));
+export default function ProductDetailPage() {
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const addToCart = useCartStore((state) => state.addItem);
+  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<ProductDetail[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!product) {
-    notFound();
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        const response = await fetch("/api/products");
+        if (!response.ok) throw new Error("Failed");
+        const data = await response.json();
+        const items = Array.isArray(data) ? data : [];
+        const found = items.find((item: ProductDetail) => String(item.id) === String(params.id)) ?? null;
+        setProduct(found);
+        setRelatedProducts(items.filter((item: ProductDetail) => item.id !== Number(params.id)).slice(0, 3));
+      } catch {
+        setProduct(null);
+        setRelatedProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [params.id]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      badge: product.badge,
+      accent: product.accent,
+      category: product.category,
+    });
+  };
+
+  if (loading) {
+    return <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900"><div className="mx-auto max-w-6xl rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-sm">Đang tải sản phẩm...</div></main>;
   }
 
-  const products = await getProducts();
-  const relatedProducts = products.filter((item) => item.id !== product.id).slice(0, 3);
+  if (!product) {
+    return (
+      <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900">
+        <div className="mx-auto max-w-xl rounded-[28px] border border-slate-200 bg-white p-10 text-center shadow-sm">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">SẢN PHẨM</p>
+          <h1 className="mt-3 text-3xl font-black tracking-tight">Sản phẩm không tồn tại</h1>
+          <Link href="/products" className="mt-5 inline-block rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">
+            Quay lại danh sách sản phẩm
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900">
@@ -56,10 +117,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             <p className="mt-5 text-base leading-7 text-slate-600">{product.description}</p>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <button className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white">
+              <button onClick={handleAddToCart} className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white">
                 Thêm vào giỏ
               </button>
-              <button className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700">
+              <button onClick={() => { handleAddToCart(); router.push("/checkout"); }} className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700">
                 Mua ngay
               </button>
             </div>

@@ -1,28 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
-
-const cartItems = [
-  {
-    id: 1,
-    name: "Đồng hồ thông minh AeroFit Pro",
-    price: 249,
-    accent: "from-cyan-500 via-sky-500 to-blue-600",
-  },
-  {
-    id: 2,
-    name: "Tai nghe không dây Nova",
-    price: 119,
-    accent: "from-violet-500 via-purple-500 to-fuchsia-600",
-  },
-  {
-    id: 5,
-    name: "Loa Bluetooth Horizon Mini",
-    price: 179,
-    accent: "from-pink-500 via-rose-500 to-orange-500",
-  },
-];
+import { useCartStore } from "@/lib/cart-store";
 
 const paymentMethods = [
   "Thanh toán khi nhận hàng (COD)",
@@ -32,6 +13,8 @@ const paymentMethods = [
 ];
 
 export default function CheckoutPage() {
+  const router = useRouter();
+  const { items, clearCart } = useCartStore();
   const [fullName, setFullName] = useState("Nguyễn Văn A");
   const [phone, setPhone] = useState("0909 123 456");
   const [address, setAddress] = useState("123 Lê Lợi, Quận 1, Hồ Chí Minh");
@@ -40,13 +23,18 @@ export default function CheckoutPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const subtotal = useMemo(() => cartItems.reduce((sum, item) => sum + item.price, 0), []);
-  const shipping = 25;
-  const discount = 120;
+  const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
+  const shipping = items.length === 0 ? 0 : 25;
+  const discount = items.length === 0 ? 0 : 120;
   const total = subtotal + shipping - discount;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (items.length === 0) {
+      setError("Giỏ hàng trống. Hãy thêm sản phẩm trước khi đặt hàng.");
+      return;
+    }
+
     setLoading(true);
     setError("");
     setSuccess("");
@@ -62,9 +50,9 @@ export default function CheckoutPage() {
           phone,
           address,
           paymentMethod,
-          items: cartItems.map((item) => ({
+          items: items.map((item) => ({
             productId: item.id,
-            quantity: 1,
+            quantity: item.quantity,
             unitPrice: item.price,
           })),
         }),
@@ -76,7 +64,8 @@ export default function CheckoutPage() {
         throw new Error(data?.error || "Đặt hàng thất bại.");
       }
 
-      setSuccess(`Đặt hàng thành công! Mã đơn: ${data.order.id}`);
+      clearCart();
+      router.push(`/checkout/success?orderId=${encodeURIComponent(data.order.id)}`);
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Đặt hàng thất bại.");
     } finally {
@@ -97,6 +86,15 @@ export default function CheckoutPage() {
           </Link>
         </div>
 
+        {items.length === 0 && !success ? (
+          <div className="rounded-[24px] border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+            <p className="text-lg font-bold text-slate-800">Giỏ hàng của bạn đang trống</p>
+            <p className="mt-2 text-sm text-slate-500">Hãy chọn một sản phẩm để bắt đầu thanh toán.</p>
+            <Link href="/products" className="mt-5 inline-block rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">
+              Tiếp tục mua sắm
+            </Link>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="space-y-6">
             <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
@@ -155,14 +153,14 @@ export default function CheckoutPage() {
             <h2 className="text-2xl font-black">Tóm tắt đơn hàng</h2>
 
             <div className="mt-5 space-y-4">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div key={item.id} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                  <div className={`h-14 w-14 rounded-xl bg-gradient-to-br ${item.accent}`} />
+                  <div className={`h-14 w-14 rounded-xl bg-gradient-to-br ${item.accent ?? "from-slate-700 via-slate-800 to-slate-900"}`} />
                   <div className="flex-1">
                     <p className="text-sm font-bold text-slate-800">{item.name}</p>
-                    <p className="text-xs text-slate-500">1 x {new Intl.NumberFormat("vi-VN").format(item.price * 1000)}đ</p>
+                    <p className="text-xs text-slate-500">{item.quantity} x {new Intl.NumberFormat("vi-VN").format(item.price * 1000)}đ</p>
                   </div>
-                  <p className="font-bold text-slate-900">{new Intl.NumberFormat("vi-VN").format(item.price * 1000)}đ</p>
+                  <p className="font-bold text-slate-900">{new Intl.NumberFormat("vi-VN").format(item.price * item.quantity * 1000)}đ</p>
                 </div>
               ))}
             </div>
@@ -196,13 +194,14 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || items.length === 0}
               className="mt-6 w-full rounded-full bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Đang xử lý..." : "Xác nhận đặt hàng"}
             </button>
           </aside>
         </form>
+        )}
       </div>
     </main>
   );

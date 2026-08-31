@@ -168,29 +168,29 @@ const categories = [
   { name: "Tool, Code, Phần mềm", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
 ];
 
-const articles = [
+const collections = [
   {
-    title: "Cách các thương hiệu biến sự kiện ra mắt thành khoảnh khắc truyền thông",
-    category: "Chiến lược PR",
-    readTime: "4 phút đọc",
+    title: "Bộ kit Robotics Starter",
+    category: "Best seller",
+    readTime: "Từ 2.499.000đ",
     excerpt:
-      "Khám phá các hook truyền thông, hợp tác creator và chiến lược giữ chân khách hàng giúp sản phẩm luôn được chú ý sau ngày ra mắt.",
+      "Gói khởi đầu hoàn chỉnh cho học tập, demo dự án và trải nghiệm lập trình robot một cách nhanh chóng.",
     accent: "from-indigo-500 via-violet-500 to-fuchsia-500",
   },
   {
-    title: "5 góc nhìn đánh giá sản phẩm mà người mua tin trước khi thanh toán",
-    category: "Đánh giá",
-    readTime: "6 phút đọc",
+    title: "Sensor & camera AI",
+    category: "Mới cập nhật",
+    readTime: "Bộ sưu tập",
     excerpt:
-      "Phân tích thực tế về các đánh giá, bằng chứng và so sánh mà người đọc quan tâm khi chọn các thiết bị cao cấp.",
+      "Linh kiện nhận diện hình ảnh, cảm biến thông minh và thiết bị hỗ trợ mô hình AI cho các dự án hiện đại.",
     accent: "from-orange-400 via-pink-500 to-rose-500",
   },
   {
-    title: "Sổ tay khuyến mãi theo mùa để tăng trưởng bán hàng trong quý 4",
-    category: "Marketing",
-    readTime: "5 phút đọc",
+    title: "Phụ kiện & thiết bị văn phòng",
+    category: "Combo tiện ích",
+    readTime: "Giải pháp",
     excerpt:
-      "Thời điểm triển khai chiến dịch, cách chồng ưu đãi và remarketing để chương trình khuyến mãi mang cảm giác cao cấp thay vì gây ồn.",
+      "Mở rộng không gian làm việc với màn hình, bàn phím, đèn và phụ kiện hỗ trợ tập trung và sáng tạo.",
     accent: "from-emerald-500 via-teal-500 to-cyan-500",
   },
 ];
@@ -222,14 +222,17 @@ export default function Home() {
             </div>
 
             <div className="hidden flex-1 items-center justify-center md:flex">
-              <label className="flex w-full max-w-2xl items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm transition focus-within:border-orange-400 focus-within:bg-white focus-within:shadow-md">
-                <Search className="h-4 w-4 text-slate-400" />
-                <input
-                  aria-label="Search products"
-                  className="w-full bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
-                  placeholder="Tìm kiếm sản phẩm, bài viết, ưu đãi..."
-                />
-              </label>
+              <form action="/products" method="GET" className="w-full max-w-2xl">
+                <label className="flex w-full items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm transition focus-within:border-orange-400 focus-within:bg-white focus-within:shadow-md">
+                  <Search className="h-4 w-4 text-slate-400" />
+                  <input
+                    aria-label="Search products"
+                    name="q"
+                    className="w-full bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
+                    placeholder="Tìm kiếm sản phẩm, ưu đãi, danh mục..."
+                  />
+                </label>
+              </form>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
@@ -263,10 +266,10 @@ export default function Home() {
                 </a>
                 <div className="invisible absolute left-0 top-full z-20 mt-3 w-72 rounded-2xl border border-slate-200 bg-white p-3 opacity-0 shadow-xl shadow-slate-200/70 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <div className="space-y-2 text-sm text-slate-700">
-                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Robot, Mô hình</a>
-                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Linh kiện, Thiết bị</a>
-                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Phụ kiện Robot</a>
-                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Kit phát triển</a>
+                    <a href="/products?category=Robot%2C+M%C3%B4+h%C3%ACnh" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Robot, Mô hình</a>
+                    <a href="/products?category=Linh+ki%E1%BB%87n%2C+Thi%E1%BA%BFt+b%E1%BB%8B" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Linh kiện, Thiết bị</a>
+                    <a href="/products?category=Ph%E1%BB%A5+ki%E1%BB%87n+Robot" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Phụ kiện Robot</a>
+                    <a href="/products?category=Kit+ph%C3%A1t+tri%E1%BB%83n" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Kit phát triển</a>
                     <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Tool, Code, Phần mềm</a>
                   </div>
                 </div>
@@ -300,10 +303,13 @@ export default function Home() {
                   .filter((category) => category.name !== "Tool, Code, Phần mềm")
                   .map((category) => (
                     <li key={category.name}>
-                      <button className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900">
+                      <a
+                        href={`/products?category=${encodeURIComponent(category.name)}`}
+                        className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
+                      >
                         <span className="truncate">{category.name}</span>
                         <span className="text-[10px] text-slate-400">({category.count.split(" ")[0]})</span>
-                      </button>
+                      </a>
                     </li>
                   ))}
               </ul>
@@ -367,6 +373,46 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="mb-5 grid gap-4 lg:grid-cols-[1fr_1fr_1fr_1fr]">
+                {categories.map((category) => (
+                  <a
+                    key={category.name}
+                    href={`/products?category=${encodeURIComponent(category.name)}`}
+                    className="group overflow-hidden rounded-[20px] border border-slate-200 bg-slate-50 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
+                  >
+                    <div className={`h-20 bg-gradient-to-br ${category.accent}`} />
+                    <div className="flex items-center justify-between gap-3 p-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">Danh mục</p>
+                        <p className="mt-1 text-sm font-bold text-slate-900">{category.name}</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-400 transition group-hover:text-slate-900" />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+
+            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="grid gap-4 md:grid-cols-4">
+                {[
+                  { title: "Giao hàng nhanh", text: "Vận chuyển trong 24-48h toàn quốc", icon: Truck },
+                  { title: "Bảo hành rõ ràng", text: "Hỗ trợ chính hãng và đổi trả minh bạch", icon: ShieldCheck },
+                  { title: "Hỗ trợ 24/7", text: "Tư vấn trước và sau mua hàng", icon: Headphones },
+                  { title: "Ưu đãi mỗi tháng", text: "Flash sale và combo giá tốt", icon: BadgePercent },
+                ].map(({ title, text, icon: Icon }) => (
+                  <div key={title} className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mt-4 text-base font-bold text-slate-900">{title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+                  </div>
+                ))}
               </div>
             </section>
 
@@ -539,37 +585,37 @@ export default function Home() {
             <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
               <div className="mb-6 flex items-end justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BÀI VIẾT</p>
-                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bài viết chia sẻ</h2>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">SẢN PHẨM</p>
+                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bộ sưu tập gợi ý cho bạn</h2>
                 </div>
-                <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
                   Xem tất cả
                   <ChevronRight className="h-4 w-4" />
-                </button>
+                </a>
               </div>
 
               <div className="grid gap-5 lg:grid-cols-3">
-                {articles.map((article) => (
-                  <article key={article.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
-                    <div className={`relative h-52 bg-gradient-to-br ${article.accent} p-4`}>
+                {collections.map((collection) => (
+                  <article key={collection.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+                    <div className={`relative h-52 bg-gradient-to-br ${collection.accent} p-4`}>
                       <div className="flex h-full items-start justify-between">
                         <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                          {article.category}
+                          {collection.category}
                         </span>
                         <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
-                          {article.readTime}
+                          {collection.readTime}
                         </span>
                       </div>
                     </div>
 
                     <div className="p-5">
-                      <h3 className="text-xl font-bold leading-tight text-slate-900">{article.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-slate-600">{article.excerpt}</p>
+                      <h3 className="text-xl font-bold leading-tight text-slate-900">{collection.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">{collection.excerpt}</p>
 
-                      <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
-                        Đọc bài viết
+                      <a href="/products" className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
+                        Khám phá ngay
                         <ArrowRight className="h-4 w-4" />
-                      </button>
+                      </a>
                     </div>
                   </article>
                 ))}

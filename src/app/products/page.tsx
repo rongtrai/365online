@@ -87,8 +87,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             <p className="text-lg font-bold text-slate-900">{filteredProducts.length} sản phẩm</p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <form className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2">
+          <form action="/products" method="GET" className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2">
               <input
                 name="q"
                 defaultValue={query}
@@ -98,69 +98,83 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               {selectedCategory !== "all" ? (
                 <input type="hidden" name="category" value={selectedCategory} />
               ) : null}
+              <input type="hidden" name="sort" value={sort} />
               <button type="submit" className="rounded-full bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white">
                 Tìm
               </button>
-            </form>
+            </div>
 
             <select
+              name="sort"
               defaultValue={sort}
               className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none"
-              onChange={(event) => {
-                const params = new URLSearchParams(window.location.search);
-                params.set("sort", event.target.value);
-                window.location.search = params.toString();
-              }}
+              onChange={(event) => event.currentTarget.form?.requestSubmit()}
             >
               <option value="featured">Nổi bật</option>
               <option value="price-asc">Giá: thấp đến cao</option>
               <option value="price-desc">Giá: cao đến thấp</option>
               <option value="rating">Đánh giá cao</option>
             </select>
-          </div>
+            {selectedCategory !== "all" ? (
+              <input type="hidden" name="category" value={selectedCategory} />
+            ) : null}
+          </form>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {filteredProducts.map((product) => (
-            <article
-              key={product.id}
-              className="group overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70"
+        {filteredProducts.length === 0 ? (
+          <div className="rounded-[24px] border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
+            <p className="text-lg font-bold text-slate-900">Không tìm thấy sản phẩm nào phù hợp.</p>
+            <p className="mt-2 text-sm text-slate-500">Hãy thử từ khóa khác hoặc quay lại danh mục toàn bộ.</p>
+            <Link
+              href="/products"
+              className="mt-5 inline-flex rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
-              <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                <div className="flex h-full items-start justify-between">
-                  <span className="rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                    {product.badge}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-4">
-                <p className="text-sm font-medium text-slate-500">{product.category}</p>
-                <h2 className="mt-2 line-clamp-2 text-xl font-bold text-slate-900">{product.name}</h2>
-
-                <div className="mt-3 flex items-center gap-1 text-amber-400">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <span key={index}>★</span>
-                  ))}
-                  <span className="ml-1 text-xs text-slate-500">{product.rating}</span>
-                </div>
-
-                <div className="mt-4 flex items-end justify-between gap-2">
-                  <div>
-                    <span className="text-2xl font-black text-slate-900">{new Intl.NumberFormat("vi-VN").format(product.price * 1000)}đ</span>
-                    <span className="ml-2 text-sm text-slate-400 line-through">{new Intl.NumberFormat("vi-VN").format(product.originalPrice * 1000)}đ</span>
+              Xem tất cả sản phẩm
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {filteredProducts.map((product) => (
+              <article
+                key={product.id}
+                className="group overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70"
+              >
+                <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                  <div className="flex h-full items-start justify-between">
+                    <span className="rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                      {product.badge}
+                    </span>
                   </div>
-                  <Link
-                    href={`/products/${product.id}`}
-                    className="rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
-                  >
-                    Xem chi tiết
-                  </Link>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+
+                <div className="p-4">
+                  <p className="text-sm font-medium text-slate-500">{product.category}</p>
+                  <h2 className="mt-2 line-clamp-2 text-xl font-bold text-slate-900">{product.name}</h2>
+
+                  <div className="mt-3 flex items-center gap-1 text-amber-400">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <span key={index}>★</span>
+                    ))}
+                    <span className="ml-1 text-xs text-slate-500">{product.rating}</span>
+                  </div>
+
+                  <div className="mt-4 flex items-end justify-between gap-2">
+                    <div>
+                      <span className="text-2xl font-black text-slate-900">{new Intl.NumberFormat("vi-VN").format(product.price * 1000)}đ</span>
+                      <span className="ml-2 text-sm text-slate-400 line-through">{new Intl.NumberFormat("vi-VN").format(product.originalPrice * 1000)}đ</span>
+                    </div>
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                    >
+                      Xem chi tiết
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );

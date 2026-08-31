@@ -17,6 +17,22 @@ export type StorefrontOrder = {
   createdAt: string;
 };
 
+export type StorefrontOrderItem = {
+  id: number;
+  orderId: number;
+  productId: number;
+  productName: string;
+  productCategory: string;
+  productAccent: string;
+  quantity: number;
+  unitPrice: number;
+};
+
+export type StorefrontOrderDetail = {
+  order: StorefrontOrder;
+  items: StorefrontOrderItem[];
+};
+
 const mapProduct = (row: Record<string, unknown>): MockProduct => ({
   id: Number(row.id ?? 0),
   name: String(row.name ?? "Unnamed product"),
@@ -81,6 +97,66 @@ export async function getOrders(): Promise<StorefrontOrder[]> {
   }
 
   return data.map(mapOrder);
+}
+
+export async function getOrderById(orderId: number): Promise<StorefrontOrderDetail | null> {
+  if (!supabase) {
+    const order = {
+      id: orderId,
+      customerName: "Nguyễn Văn A",
+      phone: "0909 123 456",
+      address: "123 Lê Lợi, Quận 1, TP.HCM",
+      status: "Chờ xử lý",
+      total: 368000,
+      createdAt: new Date().toISOString(),
+    };
+
+    return {
+      order,
+      items: [
+        { id: 1, orderId: orderId, productId: 1, productName: "Đồng hồ thông minh AeroFit Pro", productCategory: "Robot, Mô hình", productAccent: "from-cyan-500 via-sky-500 to-blue-600", quantity: 1, unitPrice: 249000 },
+        { id: 2, orderId: orderId, productId: 2, productName: "Tai nghe không dây Nova", productCategory: "Phụ kiện Robot", productAccent: "from-violet-500 via-purple-500 to-fuchsia-600", quantity: 1, unitPrice: 119000 },
+      ],
+    };
+  }
+
+  const { data: orderData, error: orderError } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", orderId)
+    .single();
+
+  if (orderError || !orderData) {
+    return null;
+  }
+
+  const { data: itemRows, error: itemError } = await supabase
+    .from("order_items")
+    .select("*, products(name, category, accent)")
+    .eq("order_id", orderId);
+
+  if (itemError) {
+    return {
+      order: mapOrder(orderData as Record<string, unknown>),
+      items: [],
+    };
+  }
+
+  const items = (itemRows ?? []).map((row: any) => ({
+    id: Number(row.id ?? 0),
+    orderId: Number(row.order_id ?? orderId),
+    productId: Number(row.product_id ?? 0),
+    productName: String(row.products?.name ?? "Sản phẩm"),
+    productCategory: String(row.products?.category ?? "Khác"),
+    productAccent: String(row.products?.accent ?? "from-slate-700 via-slate-800 to-slate-900"),
+    quantity: Number(row.quantity ?? 1),
+    unitPrice: Number(row.unit_price ?? 0),
+  }));
+
+  return {
+    order: mapOrder(orderData as Record<string, unknown>),
+    items,
+  };
 }
 
 export async function getProductById(id: number): Promise<MockProduct | null> {

@@ -1,5 +1,22 @@
 import { NextResponse } from "next/server";
+import { getOrderById } from "@/lib/storefront-data";
 import { supabase } from "@/lib/supabase";
+
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await params;
+    const orderId = Number(id);
+    const detail = await getOrderById(orderId);
+
+    if (!detail) {
+      return NextResponse.json({ error: "Không tìm thấy đơn hàng." }, { status: 404 });
+    }
+
+    return NextResponse.json(detail);
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể tải đơn hàng." }, { status: 500 });
+  }
+}
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
