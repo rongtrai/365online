@@ -293,28 +293,34 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-            <div className="flex items-center justify-between gap-3">
+        <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
+          <aside className="space-y-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
-              <button className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white">
+              <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
+                {categories
+                  .filter((category) => category.name !== "Tool, Code, Phần mềm")
+                  .map((category) => (
+                    <li key={category.name}>
+                      <button className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900">
+                        <span className="truncate">{category.name}</span>
+                        <span className="text-[10px] text-slate-400">({category.count.split(" ")[0]})</span>
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-900 p-4 text-white shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-200">Hot</p>
+              <h3 className="mt-3 text-2xl font-black tracking-tight">Kit robot AI</h3>
+              <p className="mt-2 text-sm text-slate-300">Bộ phát triển cho học tập, demo và dự án maker.</p>
+              <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-400">
                 Khám phá
-                <ArrowRight className="h-3.5 w-3.5" />
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
-            <ul className="mt-3 grid gap-2 text-sm text-slate-700 sm:grid-cols-2 xl:grid-cols-4">
-              {categories
-                .filter((category) => category.name !== "Tool, Code, Phần mềm")
-                .map((category) => (
-                  <li key={category.name}>
-                    <button className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900">
-                      <span className="truncate">{category.name}</span>
-                      <span className="text-[10px] text-slate-400">({category.count.split(" ")[0]})</span>
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </div>
+          </aside>
 
           <div className="space-y-6">
             <section className="overflow-hidden rounded-[24px] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-5 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.9)]">
