@@ -135,8 +135,8 @@ export default function Home() {
               </button>
 
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-rose-500 to-pink-500 text-lg font-bold text-white shadow-lg shadow-orange-200">
-                  N
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-rose-500 to-pink-500 text-[10px] font-black tracking-[-0.08em] text-white shadow-lg shadow-orange-200">
+                  365
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
