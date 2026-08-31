@@ -6,17 +6,17 @@ import { useEffect, useState } from "react";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 const stats = [
-  { label: "Doanh thu", value: "$128.4K", change: "+18.2%" },
+  { label: "Doanh thu", value: "128,4Mđ", change: "+18.2%" },
   { label: "Đơn hàng", value: "1,284", change: "+9.8%" },
   { label: "Khách hàng", value: "8,490", change: "+12.4%" },
   { label: "Tỷ lệ chuyển đổi", value: "4.6%", change: "+0.9%" },
 ];
 
 const recentOrders = [
-  { id: "#1024", customer: "Linh Nguyễn", total: "$249", status: "Đang giao" },
-  { id: "#1025", customer: "Minh Huy", total: "$119", status: "Hoàn tất" },
-  { id: "#1026", customer: "Phương Anh", total: "$89", status: "Chờ xử lý" },
-  { id: "#1027", customer: "Quang Vũ", total: "$329", status: "Hoàn tất" },
+  { id: "#1024", customer: "Linh Nguyễn", total: "249.000đ", status: "Đang giao" },
+  { id: "#1025", customer: "Minh Huy", total: "119.000đ", status: "Hoàn tất" },
+  { id: "#1026", customer: "Phương Anh", total: "89.000đ", status: "Chờ xử lý" },
+  { id: "#1027", customer: "Quang Vũ", total: "329.000đ", status: "Hoàn tất" },
 ];
 
 const lowStock = [
@@ -25,9 +25,12 @@ const lowStock = [
   { name: "Kit AI Starter", stock: 6 },
 ];
 
+const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(value * 1000) + "đ";
+
 export default function AdminPage() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [liveProducts, setLiveProducts] = useState<Array<{ id: number; name: string; category: string; stock: number; price: number }>>([]);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -48,7 +51,19 @@ export default function AdminPage() {
       }
     };
 
+    const loadProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        if (!res.ok) return;
+        const data = await res.json();
+        setLiveProducts(Array.isArray(data) ? data.slice(0, 5) : []);
+      } catch {
+        setLiveProducts([]);
+      }
+    };
+
     checkAccess();
+    loadProducts();
   }, [router]);
 
   const handleLogout = () => {
@@ -129,20 +144,46 @@ export default function AdminPage() {
             </div>
           </section>
 
-          <aside className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-2xl font-black">Sản phẩm sắp hết</h2>
-            <div className="mt-5 space-y-4">
-              {lowStock.map((item) => (
-                <div key={item.name} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="font-bold text-slate-900">{item.name}</p>
-                    <span className="rounded-full bg-rose-100 px-2 py-1 text-xs font-bold text-rose-700">{item.stock} còn</span>
+          <aside className="space-y-6">
+            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-2xl font-black">Sản phẩm sắp hết</h2>
+              <div className="mt-5 space-y-4">
+                {lowStock.map((item) => (
+                  <div key={item.name} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-bold text-slate-900">{item.name}</p>
+                      <span className="rounded-full bg-rose-100 px-2 py-1 text-xs font-bold text-rose-700">{item.stock} còn</span>
+                    </div>
+                    <div className="mt-3 h-2.5 rounded-full bg-slate-200">
+                      <div className="h-2.5 rounded-full bg-orange-500" style={{ width: `${Math.min((item.stock / 20) * 100, 100)}%` }} />
+                    </div>
                   </div>
-                  <div className="mt-3 h-2.5 rounded-full bg-slate-200">
-                    <div className="h-2.5 rounded-full bg-orange-500" style={{ width: `${Math.min((item.stock / 20) * 100, 100)}%` }} />
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-2xl font-black">Sản phẩm đang có</h2>
+              <div className="mt-5 space-y-3">
+                {liveProducts.length === 0 ? (
+                  <p className="text-sm text-slate-500">Đang tải dữ liệu sản phẩm...</p>
+                ) : (
+                  liveProducts.map((product) => (
+                    <div key={product.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate font-bold text-slate-900">{product.name}</p>
+                          <p className="text-xs text-slate-500">{product.category}</p>
+                        </div>
+                        <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">
+                          {product.stock} còn
+                        </span>
+                      </div>
+                      <div className="mt-2 text-sm font-semibold text-slate-700">{formatMoney(product.price)}</div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </aside>
         </div>

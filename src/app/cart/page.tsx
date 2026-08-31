@@ -36,7 +36,7 @@ export default async function CartPage() {
                   <button className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-lg">+</button>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-black text-slate-900">${item.price}</p>
+                  <p className="text-xl font-black text-slate-900">{new Intl.NumberFormat("vi-VN").format(item.price * 1000)}đ</p>
                 </div>
               </div>
             ))}
@@ -47,15 +47,15 @@ export default async function CartPage() {
             <div className="mt-6 space-y-3 text-sm text-slate-600">
               <div className="flex justify-between">
                 <span>Tạm tính</span>
-                <span>${subtotal}</span>
+                <span>{new Intl.NumberFormat("vi-VN").format(subtotal * 1000)}đ</span>
               </div>
               <div className="flex justify-between">
                 <span>Phí vận chuyển</span>
-                <span>${shipping}</span>
+                <span>{new Intl.NumberFormat("vi-VN").format(shipping * 1000)}đ</span>
               </div>
               <div className="flex justify-between border-t border-slate-200 pt-3 text-base font-bold text-slate-900">
                 <span>Tổng</span>
-                <span>${total}</span>
+                <span>{new Intl.NumberFormat("vi-VN").format(total * 1000)}đ</span>
               </div>
             </div>
 

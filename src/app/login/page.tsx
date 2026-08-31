@@ -18,22 +18,38 @@ export default function LoginPage() {
     setError("");
 
     try {
+      if (!email.trim() || !password.trim()) {
+        throw new Error("Vui lòng nhập email và mật khẩu.");
+      }
+
       if (isSupabaseConfigured && supabase) {
-        const { error: authError } = await supabase.auth.signInWithPassword({
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
-        if (authError) {
-          throw authError;
+        if (signInError && !signInData?.user) {
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+          });
+
+          if (signUpError && !signUpData?.user) {
+            throw signUpError;
+          }
+
+          const { error: retryError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (retryError) {
+            throw retryError;
+          }
         }
 
         router.push("/admin");
         return;
-      }
-
-      if (!email.trim() || !password.trim()) {
-        throw new Error("Vui lòng nhập email và mật khẩu.");
       }
 
       localStorage.setItem(

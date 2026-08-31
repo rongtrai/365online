@@ -278,10 +278,10 @@ export default function Home() {
                 </div>
               </div>
               <a href="/products" className="transition hover:text-slate-900">
-                Tool, Code, Phần mềm
+                Sản phẩm
               </a>
               <a href="/products" className="transition hover:text-slate-900">
-                Bài viết chia sẻ
+                Dịch vụ
               </a>
               <a href="/products" className="transition hover:text-slate-900">
                 Khuyến mãi

@@ -49,8 +49,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
 
             <div className="mt-5 flex items-center gap-3">
-              <span className="text-4xl font-black text-slate-900">${product.price}</span>
-              <span className="text-lg text-slate-400 line-through">${product.originalPrice}</span>
+              <span className="text-4xl font-black text-slate-900">{new Intl.NumberFormat("vi-VN").format(product.price * 1000)}đ</span>
+              <span className="text-lg text-slate-400 line-through">{new Intl.NumberFormat("vi-VN").format(product.originalPrice * 1000)}đ</span>
             </div>
 
             <p className="mt-5 text-base leading-7 text-slate-600">{product.description}</p>
@@ -90,7 +90,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 <div className="p-4">
                   <p className="text-lg font-bold text-slate-900">{item.name}</p>
                   <div className="mt-3 flex items-center justify-between">
-                    <span className="text-xl font-black text-slate-900">${item.price}</span>
+                    <span className="text-xl font-black text-slate-900">{new Intl.NumberFormat("vi-VN").format(item.price * 1000)}đ</span>
                     <span className="text-sm text-slate-500">{item.rating} ★</span>
                   </div>
                 </div>
