@@ -1,12 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getCategories, getProducts } from "@/lib/storefront-data";
 import { supabase } from "@/lib/supabase";
 
-const buildProduct = (row: Record<string, unknown>) => ({
+type Product = {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  badge: string;
+  accent: string;
+  description: string;
+  category: string;
+  stock: number;
+};
+
+const mapProduct = (row: Record<string, unknown>): Product => ({
   id: Number(row.id ?? 0),
   name: String(row.name ?? "Unnamed product"),
   slug: String(row.slug ?? "unnamed-product"),
@@ -20,68 +33,58 @@ const buildProduct = (row: Record<string, unknown>) => ({
   stock: Number(row.stock ?? 0),
 });
 
-async function fetchProductsByCategory(category: string) {
-  if (!supabase || !category.trim()) {
-    return [];
-  }
-
-  try {
-    const decodedCategory = decodeURIComponent(category).trim();
-    const { data, error } = await supabase.from("products").select("*").eq("category", decodedCategory);
-
-    if (error || !data || data.length === 0) {
-      return [];
-    }
-
-    return data.map(buildProduct);
-  } catch {
-    return [];
-  }
-}
-
-export default function ProductsPage() {
+function ProductsCatalog() {
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get("category") ?? "";
+  const categoryParam = searchParams.get("category") || "";
   const decodedCategory = (() => {
     if (!categoryParam) return "";
     try {
-      return decodeURIComponent(categoryParam).trim();
+      return decodeURIComponent(categoryParam || "").trim();
     } catch {
       return categoryParam.trim();
     }
   })();
-  const selectedCategory = decodedCategory && decodedCategory.toLowerCase() !== "all" ? decodedCategory : "all";
-  const query = (searchParams.get("q") ?? "").trim().toLowerCase();
-  const sort = searchParams.get("sort") ?? "featured";
 
-  const [categories, setCategories] = useState<Awaited<ReturnType<typeof getCategories>>>([]);
-  const [products, setProducts] = useState<Awaited<ReturnType<typeof getProducts>>>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
     const loadProducts = async () => {
+      setLoading(true);
+
       try {
-        const categoryList = await getCategories();
+        if (!supabase) {
+          setProducts([]);
+          return;
+        }
+
+        let query = supabase.from("products").select("*");
+
+        if (decodedCategory) {
+          query = query.eq("category", decodedCategory);
+        }
+
+        const { data, error } = await query.order("id");
+
         if (!isMounted) return;
-        setCategories(categoryList);
 
-        let nextProducts: Awaited<ReturnType<typeof getProducts>> = [];
-
-        if (selectedCategory === "all") {
-          nextProducts = await getProducts();
-        } else {
-          const matchedProducts = await fetchProductsByCategory(selectedCategory);
-          nextProducts = matchedProducts.length > 0 ? matchedProducts : await getProducts();
+        if (error || !data || data.length === 0) {
+          const fallbackResponse = await supabase.from("products").select("*").order("id");
+          const fallbackData = fallbackResponse.data ?? [];
+          setProducts(fallbackResponse.error || !fallbackData.length ? [] : fallbackData.map(mapProduct));
+          return;
         }
 
-        if (isMounted) {
-          setProducts(nextProducts);
-        }
+        setProducts(data.map(mapProduct));
       } catch {
         if (isMounted) {
-          setCategories([]);
           setProducts([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
         }
       }
     };
@@ -91,54 +94,12 @@ export default function ProductsPage() {
     return () => {
       isMounted = false;
     };
-  }, [selectedCategory]);
+  }, [decodedCategory]);
 
-  const normalizeCategoryValue = (value: string) =>
-    value
-      .toLowerCase()
-      .trim()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
-  const categoryMatches = (product: (typeof products)[number]) => {
-    if (selectedCategory === "all") return true;
-
-    const categoryName = product.category ?? "";
-    const categoryTarget = normalizeCategoryValue(selectedCategory);
-    const categoryNameNormalized = normalizeCategoryValue(categoryName);
-
-    return (
-      categoryNameNormalized === categoryTarget ||
-      categoryName.toLowerCase() === selectedCategory.toLowerCase() ||
-      categoryNameNormalized.includes(categoryTarget) ||
-      categoryTarget.includes(categoryNameNormalized)
-    );
-  };
-
-  const filteredProducts = products
-    .filter((product) => categoryMatches(product))
-    .filter((product) => {
-      if (!query) return true;
-      return (
-        product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query)
-      );
-    })
-    .sort((a, b) => {
-      switch (sort) {
-        case "price-asc":
-          return a.price - b.price;
-        case "price-desc":
-          return b.price - a.price;
-        case "rating":
-          return b.rating - a.rating;
-        default:
-          return b.id - a.id;
-      }
-    });
+  const filteredProducts = products.filter((product) => {
+    if (!decodedCategory) return true;
+    return product.category === decodedCategory;
+  });
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900">
@@ -156,75 +117,18 @@ export default function ProductsPage() {
           </Link>
         </div>
 
-        <div className="mb-6 rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/products"
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                selectedCategory === "all"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 hover:text-slate-900"
-              }`}
-            >
-              Tất cả
-            </Link>
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={`/products?category=${encodeURIComponent(category.name)}`}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  selectedCategory === category.name
-                    ? "bg-orange-500 text-white shadow-sm"
-                    : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 hover:text-slate-900"
-                }`}
-              >
-                {category.name}
-              </Link>
+        {loading ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="h-52 animate-pulse rounded-2xl bg-slate-200" />
+                <div className="mt-4 h-4 w-20 animate-pulse rounded bg-slate-200" />
+                <div className="mt-3 h-6 w-3/4 animate-pulse rounded bg-slate-200" />
+                <div className="mt-4 h-8 w-full animate-pulse rounded bg-slate-200" />
+              </div>
             ))}
           </div>
-        </div>
-
-        <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm text-slate-500">Hiển thị</p>
-            <p className="text-lg font-bold text-slate-900">{filteredProducts.length} sản phẩm</p>
-          </div>
-
-          <form action="/products" method="GET" className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2">
-              <input
-                name="q"
-                defaultValue={query}
-                placeholder="Tìm sản phẩm..."
-                className="w-48 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
-              />
-              {selectedCategory !== "all" ? (
-                <input type="hidden" name="category" value={selectedCategory} />
-              ) : null}
-              <input type="hidden" name="sort" value={sort} />
-              <button type="submit" className="rounded-full bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white">
-                Tìm
-              </button>
-            </div>
-
-            <select
-              name="sort"
-              defaultValue={sort}
-              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:outline-none"
-              onChange={(event) => event.currentTarget.form?.requestSubmit()}
-            >
-              <option value="featured">Nổi bật</option>
-              <option value="price-asc">Giá: thấp đến cao</option>
-              <option value="price-desc">Giá: cao đến thấp</option>
-              <option value="rating">Đánh giá cao</option>
-            </select>
-            {selectedCategory !== "all" ? (
-              <input type="hidden" name="category" value={selectedCategory} />
-            ) : null}
-          </form>
-        </div>
-
-        {filteredProducts.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="rounded-[24px] border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
             <p className="text-lg font-bold text-slate-900">Không tìm thấy sản phẩm nào phù hợp.</p>
             <p className="mt-2 text-sm text-slate-500">Hãy thử từ khóa khác hoặc quay lại danh mục toàn bộ.</p>
@@ -280,5 +184,13 @@ export default function ProductsPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900"><div className="mx-auto max-w-7xl rounded-[24px] border border-slate-200 bg-white p-8 text-center text-slate-600 shadow-sm">Đang tải sản phẩm...</div></main>}>
+      <ProductsCatalog />
+    </Suspense>
   );
 }
