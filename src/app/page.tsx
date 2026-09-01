@@ -294,8 +294,8 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
-          <aside className="space-y-4">
+        <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start">
+          <aside className="w-full space-y-4">
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
               <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
@@ -375,224 +375,224 @@ export default function Home() {
                 </div>
               </div>
             </section>
+          </div>
 
-            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="grid gap-4 md:grid-cols-4">
-                {[
-                  { title: "Giao hàng nhanh", text: "Vận chuyển trong 24-48h toàn quốc", icon: Truck },
-                  { title: "Bảo hành rõ ràng", text: "Hỗ trợ chính hãng và đổi trả minh bạch", icon: ShieldCheck },
-                  { title: "Hỗ trợ 24/7", text: "Tư vấn trước và sau mua hàng", icon: Headphones },
-                  { title: "Ưu đãi mỗi tháng", text: "Flash sale và combo giá tốt", icon: BadgePercent },
-                ].map(({ title, text, icon: Icon }) => (
-                  <div key={title} className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <h3 className="mt-4 text-base font-bold text-slate-900">{title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+          <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                { title: "Giao hàng nhanh", text: "Vận chuyển trong 24-48h toàn quốc", icon: Truck },
+                { title: "Bảo hành rõ ràng", text: "Hỗ trợ chính hãng và đổi trả minh bạch", icon: ShieldCheck },
+                { title: "Hỗ trợ 24/7", text: "Tư vấn trước và sau mua hàng", icon: Headphones },
+                { title: "Ưu đãi mỗi tháng", text: "Flash sale và combo giá tốt", icon: BadgePercent },
+              ].map(({ title, text, icon: Icon }) => (
+                <div key={title} className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+                    <Icon className="h-5 w-5" />
                   </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-5 flex items-end justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">NỔI BẬT</p>
-                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Sản phẩm bán chạy nhất</h2>
+                  <h3 className="mt-4 text-base font-bold text-slate-900">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
                 </div>
-                <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-                  Xem tất cả
-                  <ChevronRight className="h-4 w-4" />
-                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">NỔI BẬT</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Sản phẩm bán chạy nhất</h2>
               </div>
+              <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                Xem tất cả
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-                {products.slice(0, 4).map((product) => {
-                  const isSaved = wishlistIds.includes(product.id);
+            <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+              {products.slice(0, 4).map((product) => {
+                const isSaved = wishlistIds.includes(product.id);
 
-                  return (
-                    <article
-                      key={product.id}
-                      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
-                    >
-                      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
-                        <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                          <div className="flex h-full items-start justify-between">
-                            <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                              {product.badge}
-                            </div>
-                            <button
-                              aria-label={`Toggle wishlist for ${product.name}`}
-                              onClick={() => toggleWishlist(product.id)}
-                              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
-                            >
-                              <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
-                            </button>
+                return (
+                  <article
+                    key={product.id}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                  >
+                    <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                      <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                        <div className="flex h-full items-start justify-between">
+                          <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                            {product.badge}
                           </div>
+                          <button
+                            aria-label={`Toggle wishlist for ${product.name}`}
+                            onClick={() => toggleWishlist(product.id)}
+                            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                          >
+                            <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                          </button>
                         </div>
-                      </div>
-
-                      <div className="mt-4 flex flex-1 flex-col">
-                        <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
-
-                        <div className="mt-3 flex items-center gap-1 text-amber-400">
-                          {Array.from({ length: 5 }).map((_, index) => (
-                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
-                          ))}
-                          <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
-                        </div>
-
-                        <div className="mt-auto pt-3">
-                          <div className="flex min-h-[42px] items-center justify-between gap-2">
-                            <div className="min-w-0 flex items-baseline gap-2">
-                              <span className="text-xl font-black text-slate-900">${product.price}</span>
-                              <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
-                            </div>
-                            <button
-                              onClick={() =>
-                                addToCart({
-                                  id: product.id,
-                                  name: product.name,
-                                  price: product.price,
-                                  originalPrice: product.originalPrice,
-                                  badge: product.badge,
-                                  accent: product.accent,
-                                  category: "Robot, Mô hình",
-                                })
-                              }
-                              className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
-                            >
-                              Thêm vào giỏ
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-6 flex items-end justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-500">SẢN PHẨM</p>
-                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Khám phá thêm cho bạn</h2>
-                </div>
-                <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-                  Xem thêm
-                  <ChevronRight className="h-4 w-4" />
-                </a>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-                {catalogProducts.slice(0, 8).map((product) => {
-                  const isSaved = wishlistIds.includes(product.id);
-
-                  return (
-                    <article
-                      key={product.id}
-                      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
-                    >
-                      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
-                        <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                          <div className="flex h-full items-start justify-between">
-                            <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                              {product.badge}
-                            </div>
-                            <button
-                              aria-label={`Toggle wishlist for ${product.name}`}
-                              onClick={() => toggleWishlist(product.id)}
-                              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
-                            >
-                              <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 flex flex-1 flex-col">
-                        <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
-
-                        <div className="mt-3 flex items-center gap-1 text-amber-400">
-                          {Array.from({ length: 5 }).map((_, index) => (
-                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
-                          ))}
-                          <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
-                        </div>
-
-                        <div className="mt-auto pt-3">
-                          <div className="flex min-h-[42px] items-center justify-between gap-2">
-                            <div className="min-w-0 flex items-baseline gap-2">
-                              <span className="text-xl font-black text-slate-900">${product.price}</span>
-                              <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
-                            </div>
-                            <button
-                              onClick={() =>
-                                addToCart({
-                                  id: product.id,
-                                  name: product.name,
-                                  price: product.price,
-                                  originalPrice: product.originalPrice,
-                                  badge: product.badge,
-                                  accent: product.accent,
-                                  category: "Robot, Mô hình",
-                                })
-                              }
-                              className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
-                            >
-                              Thêm vào giỏ
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-6 flex items-end justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">SẢN PHẨM</p>
-                  <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bộ sưu tập gợi ý cho bạn</h2>
-                </div>
-                <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-                  Xem tất cả
-                  <ChevronRight className="h-4 w-4" />
-                </a>
-              </div>
-
-              <div className="grid gap-5 lg:grid-cols-3">
-                {collections.map((collection) => (
-                  <article key={collection.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
-                    <div className={`relative h-52 bg-gradient-to-br ${collection.accent} p-4`}>
-                      <div className="flex h-full items-start justify-between">
-                        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                          {collection.category}
-                        </span>
-                        <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
-                          {collection.readTime}
-                        </span>
                       </div>
                     </div>
 
-                    <div className="p-5">
-                      <h3 className="text-xl font-bold leading-tight text-slate-900">{collection.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-slate-600">{collection.excerpt}</p>
+                    <div className="mt-4 flex flex-1 flex-col">
+                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
 
-                      <a href="/products" className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
-                        Khám phá ngay
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
+                      <div className="mt-3 flex items-center gap-1 text-amber-400">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                        ))}
+                        <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                      </div>
+
+                      <div className="mt-auto pt-3">
+                        <div className="flex min-h-[42px] items-center justify-between gap-2">
+                          <div className="min-w-0 flex items-baseline gap-2">
+                            <span className="text-xl font-black text-slate-900">${product.price}</span>
+                            <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                          </div>
+                          <button
+                            onClick={() =>
+                              addToCart({
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                originalPrice: product.originalPrice,
+                                badge: product.badge,
+                                accent: product.accent,
+                                category: "Robot, Mô hình",
+                              })
+                            }
+                            className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
+                          >
+                            Thêm vào giỏ
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </article>
-                ))}
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-500">SẢN PHẨM</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Khám phá thêm cho bạn</h2>
               </div>
-            </section>
-          </div>
+              <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                Xem thêm
+                <ChevronRight className="h-4 w-4" />
+              </a>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+              {catalogProducts.slice(0, 8).map((product) => {
+                const isSaved = wishlistIds.includes(product.id);
+
+                return (
+                  <article
+                    key={product.id}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                  >
+                    <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                      <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                        <div className="flex h-full items-start justify-between">
+                          <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                            {product.badge}
+                          </div>
+                          <button
+                            aria-label={`Toggle wishlist for ${product.name}`}
+                            onClick={() => toggleWishlist(product.id)}
+                            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                          >
+                            <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex flex-1 flex-col">
+                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
+
+                      <div className="mt-3 flex items-center gap-1 text-amber-400">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                        ))}
+                        <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                      </div>
+
+                      <div className="mt-auto pt-3">
+                        <div className="flex min-h-[42px] items-center justify-between gap-2">
+                          <div className="min-w-0 flex items-baseline gap-2">
+                            <span className="text-xl font-black text-slate-900">${product.price}</span>
+                            <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                          </div>
+                          <button
+                            onClick={() =>
+                              addToCart({
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                originalPrice: product.originalPrice,
+                                badge: product.badge,
+                                accent: product.accent,
+                                category: "Robot, Mô hình",
+                              })
+                            }
+                            className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
+                          >
+                            Thêm vào giỏ
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">SẢN PHẨM</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bộ sưu tập gợi ý cho bạn</h2>
+              </div>
+              <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+                Xem tất cả
+                <ChevronRight className="h-4 w-4" />
+              </a>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-3">
+              {collections.map((collection) => (
+                <article key={collection.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+                  <div className={`relative h-52 bg-gradient-to-br ${collection.accent} p-4`}>
+                    <div className="flex h-full items-start justify-between">
+                      <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
+                        {collection.category}
+                      </span>
+                      <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+                        {collection.readTime}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold leading-tight text-slate-900">{collection.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{collection.excerpt}</p>
+
+                    <a href="/products" className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
+                      Khám phá ngay
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
 
