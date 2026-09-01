@@ -19,6 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { useCartStore } from "@/lib/cart-store";
 
@@ -161,12 +162,12 @@ const catalogProducts: Product[] = [
   },
 ];
 
-const categories = [
-  { name: "Robot, Mô hình", count: "24 sản phẩm", accent: "from-sky-500 via-cyan-500 to-teal-500" },
-  { name: "Linh kiện, Thiết bị", count: "18 sản phẩm", accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
-  { name: "Phụ kiện Robot", count: "16 sản phẩm", accent: "from-amber-400 via-orange-500 to-rose-500" },
-  { name: "Kit phát triển", count: "32 sản phẩm", accent: "from-emerald-500 via-teal-500 to-cyan-600" },
-  { name: "Tool, Code, Phần mềm", count: "14 sản phẩm", accent: "from-pink-500 via-rose-500 to-red-500" },
+const fallbackCategories = [
+  { name: "Robot, Mô hình", count: 24, accent: "from-sky-500 via-cyan-500 to-teal-500" },
+  { name: "Linh kiện, Thiết bị", count: 18, accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
+  { name: "Phụ kiện Robot", count: 16, accent: "from-amber-400 via-orange-500 to-rose-500" },
+  { name: "Kit phát triển", count: 32, accent: "from-emerald-500 via-teal-500 to-cyan-600" },
+  { name: "Tool, Code, Phần mềm", count: 14, accent: "from-pink-500 via-rose-500 to-red-500" },
 ];
 
 const collections = [
@@ -201,6 +202,42 @@ export default function Home() {
   const wishlistIds = useShopStore((state) => state.wishlistIds);
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
   const addToCart = useCartStore((state) => state.addItem);
+  const [categories, setCategories] = useState<typeof fallbackCategories>(fallbackCategories);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        if (!response.ok) throw new Error("Failed to fetch categories");
+        const data = await response.json();
+
+        if (!isMounted) return;
+
+        const nextCategories = Array.isArray(data)
+          ? data.map((category: { name?: string; count?: number | string; product_count?: number | string; accent?: string }) => ({
+              name: String(category.name ?? "Khác"),
+              count: Number(category.count ?? category.product_count ?? 0) || 0,
+              accent: String(category.accent ?? "from-slate-700 via-slate-800 to-slate-900"),
+            }))
+          : fallbackCategories;
+
+        setCategories(nextCategories);
+      } catch {
+        if (isMounted) {
+          setCategories(fallbackCategories);
+        }
+      }
+    };
+
+    loadCategories();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const articleCards: (typeof collections)[number][] = collections.length
     ? collections
     : [
@@ -323,7 +360,9 @@ export default function Home() {
                         className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
                       >
                         <span className="truncate">{category.name}</span>
-                        <span className="text-[10px] text-slate-400">({category.count.split(" ")[0]})</span>
+                        <span className="inline-flex min-w-10 items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                          {Number(category.count ?? 0) || 0}
+                        </span>
                       </Link>
                     </li>
                   ))}
