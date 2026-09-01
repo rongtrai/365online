@@ -26,7 +26,6 @@ const useShopStore = create<{
 
 export default function Header() {
   const cartCount = useCartStore((state) => state.itemCount);
-  const wishlistIds = useShopStore((state) => state.wishlistIds);
 
   return (
     <header className="sticky top-0 z-50 border-b border-teal-500/20 bg-teal-700 text-white shadow-sm backdrop-blur-xl">
@@ -62,14 +61,6 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <button className="relative inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white transition hover:bg-white/15 hover:text-teal-100 sm:px-4">
-              <Heart className="h-4 w-4" />
-              <span className="hidden sm:inline">Yêu thích</span>
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
-                {wishlistIds.length}
-              </span>
-            </button>
-
             <a href="/login" className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/15 hover:text-teal-100">
               Đăng nhập
             </a>
