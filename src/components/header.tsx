@@ -5,14 +5,20 @@ import {
   Search,
   ShoppingCart,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { supabase } from "@/lib/supabase";
 
 export default function Header() {
+  const pathname = usePathname();
   const cartItems = useCartStore((state) => state.items);
   const totalQuantity = cartItems ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   useEffect(() => {
     const client = supabase;
