@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,6 +17,8 @@ type ProductDetail = {
   description: string;
   category: string;
   stock: number;
+  imageUrl?: string;
+  image_url?: string;
 };
 
 export default function ProductDetailPage() {
@@ -60,6 +63,8 @@ export default function ProductDetailPage() {
     });
   };
 
+  const productImageUrl = product?.imageUrl || product?.image_url || "";
+
   if (loading) {
     return <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900"><div className="mx-auto max-w-6xl rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-sm">Đang tải sản phẩm...</div></main>;
   }
@@ -91,12 +96,29 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="grid gap-8 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm md:grid-cols-2">
-          <div className={`h-[420px] rounded-[28px] bg-gradient-to-br ${product.accent} p-6`}>
-            <div className="flex h-full items-start justify-between">
-              <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                {product.badge}
-              </span>
-            </div>
+          <div className="relative h-[420px] overflow-hidden rounded-[28px] border border-slate-200 bg-slate-100">
+            {productImageUrl ? (
+              <Image
+                src={productImageUrl}
+                alt={product.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <div className={`relative flex h-full w-full items-end justify-start bg-gradient-to-br ${product.accent} p-6`}>
+                <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
+                  <div className="rounded-2xl border border-white/40 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">{product.category}</p>
+                    <p className="mt-2 max-w-[220px] text-xl font-black text-white">{product.name}</p>
+                  </div>
+                </div>
+                <span className="relative z-10 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                  {product.badge}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col justify-center">

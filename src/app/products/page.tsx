@@ -7,15 +7,48 @@ type ProductsPageProps = {
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const resolvedParams = await Promise.resolve(searchParams ?? {});
-  const selectedCategory = typeof resolvedParams.category === "string" ? resolvedParams.category : "all";
+  const rawCategory = typeof resolvedParams.category === "string" ? resolvedParams.category : "";
+  const normalizedCategory = rawCategory.trim();
+  const selectedCategory = normalizedCategory && normalizedCategory.toLowerCase() !== "all" ? normalizedCategory : "all";
   const query = typeof resolvedParams.q === "string" ? resolvedParams.q.trim().toLowerCase() : "";
   const sort = typeof resolvedParams.sort === "string" ? resolvedParams.sort : "featured";
-  const [categories, products] = await Promise.all([getCategories(), getProducts()]);
 
-  const filteredProducts = (selectedCategory === "all"
-    ? products
-    : products.filter((product) => product.category === selectedCategory)
-  )
+  let categories: Awaited<ReturnType<typeof getCategories>> = [];
+  let products: Awaited<ReturnType<typeof getProducts>> = [];
+
+  try {
+    [categories, products] = await Promise.all([getCategories(), getProducts()]);
+  } catch {
+    categories = [];
+    products = [];
+  }
+
+  const normalizeCategoryValue = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+  const categoryMatches = (product: (typeof products)[number]) => {
+    if (selectedCategory === "all") return true;
+
+    const categoryName = product.category ?? "";
+    const categoryTarget = normalizeCategoryValue(selectedCategory);
+    const categoryNameNormalized = normalizeCategoryValue(categoryName);
+
+    return (
+      categoryNameNormalized === categoryTarget ||
+      categoryName.toLowerCase() === selectedCategory.toLowerCase() ||
+      categoryNameNormalized.includes(categoryTarget) ||
+      categoryTarget.includes(categoryNameNormalized)
+    );
+  };
+
+  const filteredProducts = products
+    .filter((product) => categoryMatches(product))
     .filter((product) => {
       if (!query) return true;
       return (
