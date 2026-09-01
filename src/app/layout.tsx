@@ -19,13 +19,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   const Header = () => (
-    <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+    <header className="border-b border-teal-500/20 bg-teal-600 backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <div className="text-lg font-black tracking-tight text-slate-900">365online</div>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
-          <a href="/" className="transition hover:text-slate-900">Trang chủ</a>
-          <a href="/products" className="transition hover:text-slate-900">Sản phẩm</a>
-          <a href="/cart" className="transition hover:text-slate-900">Giỏ hàng</a>
+        <div className="text-lg font-black tracking-tight text-white">365online</div>
+        <nav className="hidden items-center gap-6 text-sm font-medium text-white/90 md:flex">
+          <a href="/" className="transition hover:text-teal-100">Trang chủ</a>
+          <a href="/products" className="transition hover:text-teal-100">Sản phẩm</a>
+          <a href="/cart" className="transition hover:text-teal-100">Giỏ hàng</a>
         </nav>
       </div>
     </header>
