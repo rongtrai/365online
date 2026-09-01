@@ -37,7 +37,7 @@ export default function Header() {
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 text-[9px] font-black tracking-[-0.12em] text-white shadow-lg shadow-teal-900/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 text-[9px] font-black tracking-[-0.12em] text-white shadow-lg shadow-pink-900/20">
                 365
               </div>
               <div className="leading-none">
