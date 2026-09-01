@@ -29,6 +29,11 @@ type OrderItem = {
   createdAt: string;
 };
 
+type CategoryOption = {
+  id: number;
+  name: string;
+};
+
 const demoOrders: OrderItem[] = [
   { id: 1024, customerName: "Linh Nguyễn", phone: "0909 123 456", address: "HCM", status: "Đang giao", total: 249000, createdAt: new Date().toISOString() },
   { id: 1025, customerName: "Minh Huy", phone: "0912 111 222", address: "Đà Nẵng", status: "Hoàn tất", total: 119000, createdAt: new Date().toISOString() },
@@ -48,6 +53,7 @@ export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [liveProducts, setLiveProducts] = useState<ProductItem[]>([]);
   const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [form, setForm] = useState({ name: "", price: "", stock: "", category: "Robot, Mô hình", description: "" });
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
@@ -74,7 +80,12 @@ export default function AdminPage() {
 
     const loadData = async () => {
       try {
-        const [productsRes, ordersRes] = await Promise.all([fetch("/api/products"), fetch("/api/orders")]);
+        const [productsRes, ordersRes, categoriesRes] = await Promise.all([
+          fetch("/api/products"),
+          fetch("/api/orders"),
+          fetch("/api/categories"),
+        ]);
+
         if (productsRes.ok) {
           const productsData = await productsRes.json();
           setLiveProducts(Array.isArray(productsData) ? productsData.slice(0, 8) : []);
@@ -85,6 +96,27 @@ export default function AdminPage() {
           setOrders(Array.isArray(ordersData) && ordersData.length > 0 ? ordersData : demoOrders);
         } else {
           setOrders(demoOrders);
+        }
+
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json();
+          const mappedCategories = Array.isArray(categoriesData)
+            ? categoriesData
+                .map((category: { id?: number; name?: string }) => ({
+                  id: Number(category.id ?? 0),
+                  name: String(category.name ?? "Khác"),
+                }))
+                .filter((category) => category.name && category.id)
+            : [];
+          setCategories(mappedCategories);
+          if (mappedCategories.length > 0) {
+            setForm((current) => ({
+              ...current,
+              category: current.category && mappedCategories.some((category) => category.name === current.category)
+                ? current.category
+                : mappedCategories[0].name,
+            }));
+          }
         }
       } catch {
         setLiveProducts([]);
@@ -345,12 +377,21 @@ export default function AdminPage() {
                     onChange={(event) => setForm((current) => ({ ...current, stock: event.target.value }))}
                   />
                 </div>
-                <input
+                <select
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  placeholder="Phân loại"
                   value={form.category}
                   onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}
-                />
+                >
+                  {categories.length === 0 ? (
+                    <option value="Robot, Mô hình">Robot, Mô hình</option>
+                  ) : (
+                    categories.map((category) => (
+                      <option key={category.id} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))
+                  )}
+                </select>
                 <textarea
                   className="min-h-[80px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
                   placeholder="Mô tả"
@@ -379,7 +420,9 @@ export default function AdminPage() {
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <p className="truncate font-bold text-slate-900">{product.name}</p>
-                          <p className="text-xs text-slate-500">{product.category}</p>
+                          <span className="mt-1 inline-flex rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-700">
+                            {product.category}
+                          </span>
                         </div>
                         <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">{product.stock} còn</span>
                       </div>

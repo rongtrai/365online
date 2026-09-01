@@ -19,6 +19,7 @@ type ProductDetail = {
   stock: number;
   imageUrl?: string;
   image_url?: string;
+  slug?: string;
 };
 
 export default function ProductDetailPage() {
@@ -36,9 +37,21 @@ export default function ProductDetailPage() {
         if (!response.ok) throw new Error("Failed");
         const data = await response.json();
         const items = Array.isArray(data) ? data : [];
-        const found = items.find((item: ProductDetail) => String(item.id) === String(params.id)) ?? null;
+        const productIdOrSlug = String(params.id ?? "");
+        const found =
+          items.find((item: ProductDetail) => String(item.id) === productIdOrSlug || item.slug === productIdOrSlug) ??
+          null;
         setProduct(found);
-        setRelatedProducts(items.filter((item: ProductDetail) => item.id !== Number(params.id)).slice(0, 3));
+
+        if (found) {
+          const sameCategory = items.filter(
+            (item: ProductDetail) =>
+              item.category === found.category && item.id !== found.id && item.slug !== found.slug
+          );
+          setRelatedProducts(sameCategory.slice(0, 3));
+        } else {
+          setRelatedProducts([]);
+        }
       } catch {
         setProduct(null);
         setRelatedProducts([]);
@@ -122,7 +135,9 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="flex flex-col justify-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">{product.category}</p>
+            <span className="inline-flex w-fit rounded-full bg-orange-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-orange-700">
+              {product.category}
+            </span>
             <h1 className="mt-3 text-4xl font-black tracking-tight">{product.name}</h1>
             <div className="mt-4 flex items-center gap-2 text-amber-400">
               {Array.from({ length: 5 }).map((_, index) => (

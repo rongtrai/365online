@@ -1,14 +1,49 @@
 import Link from "next/link";
 import { getCategories, getProducts } from "@/lib/storefront-data";
+import { supabase } from "@/lib/supabase";
 
 type ProductsPageProps = {
   searchParams?: Promise<{ category?: string; q?: string; sort?: string }> | { category?: string; q?: string; sort?: string };
 };
 
+const buildProduct = (row: Record<string, unknown>) => ({
+  id: Number(row.id ?? 0),
+  name: String(row.name ?? "Unnamed product"),
+  slug: String(row.slug ?? "unnamed-product"),
+  price: Number(row.price ?? 0),
+  originalPrice: Number(row.original_price ?? row.originalPrice ?? Number(row.price ?? 0)),
+  rating: Number(row.rating ?? 5),
+  badge: String(row.badge ?? "NEW"),
+  accent: String(row.accent ?? "from-slate-700 via-slate-800 to-slate-900"),
+  description: String(row.description ?? "Sản phẩm của 365online."),
+  category: String(row.category ?? "Khác"),
+  stock: Number(row.stock ?? 0),
+});
+
+async function fetchProductsByCategory(category: string) {
+  if (!supabase || !category.trim()) {
+    return [];
+  }
+
+  try {
+    const decodedCategory = decodeURIComponent(category).trim();
+    const { data, error } = await supabase.from("products").select("*").eq("category", decodedCategory);
+
+    if (error || !data) {
+      return []; 
+    }
+
+    return data.map(buildProduct);
+  } catch {
+    return [];
+  }
+}
+
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const resolvedParams = await Promise.resolve(searchParams ?? {});
   const rawCategory = typeof resolvedParams.category === "string" ? resolvedParams.category : "";
-  const normalizedCategory = rawCategory.trim();
+  const decodedCategory = rawCategory ? decodeURIComponent(rawCategory).trim() : "";
+  const normalizedCategory = decodedCategory.trim();
   const selectedCategory = normalizedCategory && normalizedCategory.toLowerCase() !== "all" ? normalizedCategory : "all";
   const query = typeof resolvedParams.q === "string" ? resolvedParams.q.trim().toLowerCase() : "";
   const sort = typeof resolvedParams.sort === "string" ? resolvedParams.sort : "featured";
@@ -17,7 +52,10 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   let products: Awaited<ReturnType<typeof getProducts>> = [];
 
   try {
-    [categories, products] = await Promise.all([getCategories(), getProducts()]);
+    [categories, products] = await Promise.all([
+      getCategories(),
+      selectedCategory === "all" ? getProducts() : fetchProductsByCategory(selectedCategory).then((categoryProducts) => (categoryProducts.length > 0 ? categoryProducts : getProducts())),
+    ]);
   } catch {
     categories = [];
     products = [];
