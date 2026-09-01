@@ -264,6 +264,8 @@ export default function Home() {
         },
       ];
 
+  const sidebarCategories = categories.length ? categories : fallbackCategories;
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -272,32 +274,21 @@ export default function Home() {
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
               <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
-                {categories.length === 0 ? (
-                  Array.from({ length: 4 }).map((_, index) => (
-                    <li key={`category-skeleton-${index}`}>
-                      <div className="flex w-full items-center justify-between rounded-xl px-2.5 py-2">
-                        <span className="h-4 w-24 animate-pulse rounded bg-slate-200" />
-                        <span className="h-5 w-8 animate-pulse rounded-full bg-slate-200" />
-                      </div>
+                {sidebarCategories
+                  .filter((category) => category.name !== "Tool, Code, Phần mềm")
+                  .map((category) => (
+                    <li key={category.name}>
+                      <Link
+                        href={`/products?category=${encodeURIComponent(category.name)}`}
+                        className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
+                      >
+                        <span className="truncate">{category.name}</span>
+                        <span className="inline-flex min-w-10 items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                          {Number(category.count ?? 0) || 0}
+                        </span>
+                      </Link>
                     </li>
-                  ))
-                ) : (
-                  categories
-                    .filter((category) => category.name !== "Tool, Code, Phần mềm")
-                    .map((category) => (
-                      <li key={category.name}>
-                        <Link
-                          href={`/products?category=${encodeURIComponent(category.name)}`}
-                          className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
-                        >
-                          <span className="truncate">{category.name}</span>
-                          <span className="inline-flex min-w-10 items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
-                            {Number(category.count ?? 0) || 0}
-                          </span>
-                        </Link>
-                      </li>
-                    ))
-                )}
+                  ))}
               </ul>
             </div>
 
