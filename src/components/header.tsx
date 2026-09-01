@@ -106,17 +106,11 @@ export default function Header() {
 
         <nav className="flex items-center gap-4 overflow-x-auto border-t border-white/10 py-3 text-sm font-medium text-white/90">
           <div className="flex items-center gap-6 whitespace-nowrap">
-            <a href="/" className="transition hover:text-teal-100">
-              Cửa hàng
+            <a href="/products" className="transition hover:text-teal-100">
+              Sản phẩm
             </a>
-            <a href="/tools" className="transition hover:text-teal-100">
-              Tool, Code, Phần mềm
-            </a>
-            <a href="/blog" className="transition hover:text-teal-100">
-              Bài viết chia sẻ
-            </a>
-            <a href="/promotions" className="transition hover:text-teal-100">
-              Khuyến mãi
+            <a href="/posts" className="transition hover:text-teal-100">
+              Bài viết
             </a>
           </div>
         </nav>
