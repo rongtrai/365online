@@ -681,7 +681,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="mt-16 border-t border-slate-200 bg-slate-950 text-slate-200">
+      <footer className="mt-16 border-t border-white/20 bg-teal-700 text-teal-50">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
             <div>
@@ -694,26 +694,26 @@ export default function Home() {
                 </div>
               </div>
 
-              <p className="mt-5 max-w-sm text-sm leading-6 text-slate-400">
+              <p className="mt-5 max-w-sm text-sm leading-6 text-teal-100">
                 Khám phá các sản phẩm thiết yếu, thiết bị xu hướng và ưu đãi nổi bật giúp cuộc sống hàng ngày trở nên tiện nghi, hiện đại và đáng tin cậy hơn.
               </p>
 
-              <div className="mt-5 flex items-center gap-3 text-slate-300">
-                <a href="#" className="rounded-full border border-slate-700 bg-slate-900 p-2.5 transition hover:border-slate-500 hover:text-white" aria-label="Instagram">
+              <div className="mt-5 flex items-center gap-3 text-teal-50">
+                <a href="#" className="rounded-full border border-white/20 bg-white/10 p-2.5 transition hover:border-white/40 hover:text-white" aria-label="Instagram">
                   <Camera className="h-4 w-4" />
                 </a>
-                <a href="#" className="rounded-full border border-slate-700 bg-slate-900 p-2.5 transition hover:border-slate-500 hover:text-white" aria-label="Facebook">
+                <a href="#" className="rounded-full border border-white/20 bg-white/10 p-2.5 transition hover:border-white/40 hover:text-white" aria-label="Facebook">
                   <Globe className="h-4 w-4" />
                 </a>
-                <a href="#" className="rounded-full border border-slate-700 bg-slate-900 p-2.5 transition hover:border-slate-500 hover:text-white" aria-label="Chat">
+                <a href="#" className="rounded-full border border-white/20 bg-white/10 p-2.5 transition hover:border-white/40 hover:text-white" aria-label="Chat">
                   <MessageCircle className="h-4 w-4" />
                 </a>
               </div>
             </div>
 
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-400">Chăm sóc khách hàng</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-teal-100">Chăm sóc khách hàng</h3>
+              <ul className="mt-4 space-y-3 text-sm text-teal-50">
                 <li><a href="#" className="transition hover:text-white">Liên hệ hỗ trợ</a></li>
                 <li><a href="#" className="transition hover:text-white">Vận chuyển & giao hàng</a></li>
                 <li><a href="#" className="transition hover:text-white">Đổi trả & hoàn tiền</a></li>
@@ -722,8 +722,8 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-400">Công ty</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-teal-100">Công ty</h3>
+              <ul className="mt-4 space-y-3 text-sm text-teal-50">
                 <li><a href="#" className="transition hover:text-white">Về chúng tôi</a></li>
                 <li><a href="#" className="transition hover:text-white">Chương trình đối tác</a></li>
                 <li><a href="#" className="transition hover:text-white">Chính sách bảo mật</a></li>
@@ -732,7 +732,7 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-400">Thanh toán</h3>
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-teal-100">Thanh toán</h3>
               <div className="mt-4 grid max-w-xs grid-cols-4 gap-3">
                 {[
                   ["Visa", "bg-gradient-to-br from-blue-600 to-indigo-700"],
@@ -746,28 +746,28 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="mt-6 space-y-3 text-sm text-slate-300">
+              <div className="mt-6 space-y-3 text-sm text-teal-50">
                 <div className="flex items-center gap-3">
-                  <Truck className="h-4 w-4 text-orange-400" />
+                  <Truck className="h-4 w-4 text-orange-300" />
                   <span>Miễn phí vận chuyển cho đơn từ 1.500.000đ</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                  <ShieldCheck className="h-4 w-4 text-emerald-300" />
                   <span>Bảo mật thanh toán an toàn</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Headphones className="h-4 w-4 text-sky-400" />
+                  <Headphones className="h-4 w-4 text-sky-300" />
                   <span>Hỗ trợ khách hàng 24/7</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-4 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-10 flex flex-col gap-4 border-t border-white/20 pt-6 text-sm text-teal-100 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 365online. Mọi quyền được bảo lưu.</p>
             <div className="flex items-center gap-5">
-              <span className="flex items-center gap-2"><CreditCard className="h-4 w-4" /> Thanh toán an toàn</span>
-              <span>support@365online.com</span>
+              <span className="flex items-center gap-2 text-teal-50"><CreditCard className="h-4 w-4" /> Thanh toán an toàn</span>
+              <span className="text-teal-50">support@365online.com</span>
             </div>
           </div>
         </div>
