@@ -55,7 +55,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-teal-500/20 bg-teal-700 text-white shadow-sm backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-teal-500/20 bg-teal-800 text-white shadow-sm backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 py-3 md:flex-row md:items-center">
           <div className="flex items-center gap-3">
