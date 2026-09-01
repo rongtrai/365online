@@ -260,25 +260,14 @@ export default function Home() {
 
           <nav className="flex items-center justify-between gap-4 overflow-x-auto border-t border-slate-100 py-3 text-sm font-medium text-slate-600">
             <div className="flex items-center gap-6 whitespace-nowrap">
-              <div className="group relative">
-                <a href="/products" className="text-slate-900 underline decoration-orange-500 underline-offset-8">
-                  Cửa hàng
-                </a>
-                <div className="invisible absolute left-0 top-full z-20 mt-3 w-72 rounded-2xl border border-slate-200 bg-white p-3 opacity-0 shadow-xl shadow-slate-200/70 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                  <div className="space-y-2 text-sm text-slate-700">
-                    <a href="/products?category=Robot%2C+M%C3%B4+h%C3%ACnh" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Robot, Mô hình</a>
-                    <a href="/products?category=Linh+ki%E1%BB%87n%2C+Thi%E1%BA%BFt+b%E1%BB%8B" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Linh kiện, Thiết bị</a>
-                    <a href="/products?category=Ph%E1%BB%A5+ki%E1%BB%87n+Robot" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Phụ kiện Robot</a>
-                    <a href="/products?category=Kit+ph%C3%A1t+tri%E1%BB%83n" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Kit phát triển</a>
-                    <a href="/products" className="block rounded-xl px-3 py-2 transition hover:bg-slate-100 hover:text-slate-900">Tool, Code, Phần mềm</a>
-                  </div>
-                </div>
-              </div>
-              <a href="/products" className="transition hover:text-slate-900">
-                Sản phẩm
+              <a href="/products" className="text-slate-900 underline decoration-orange-500 underline-offset-8 transition hover:text-slate-900">
+                Cửa hàng
               </a>
               <a href="/products" className="transition hover:text-slate-900">
-                Dịch vụ
+                Tool, Code, Phần mềm
+              </a>
+              <a href="/products" className="transition hover:text-slate-900">
+                Bài viết chia sẻ
               </a>
               <a href="/products" className="transition hover:text-slate-900">
                 Khuyến mãi
