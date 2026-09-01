@@ -18,12 +18,44 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const Header = () => (
+    <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <div className="text-lg font-black tracking-tight text-slate-900">365online</div>
+        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+          <a href="/" className="transition hover:text-slate-900">Trang chủ</a>
+          <a href="/products" className="transition hover:text-slate-900">Sản phẩm</a>
+          <a href="/cart" className="transition hover:text-slate-900">Giỏ hàng</a>
+        </nav>
+      </div>
+    </header>
+  );
+
+  const Footer = () => (
+    <footer className="mt-auto border-t border-slate-200 bg-slate-950 text-slate-200">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm sm:px-6 lg:flex-row lg:px-8">
+        <p>© 2026 365online</p>
+        <div className="flex items-center gap-4">
+          <a href="/" className="hover:text-white">Trang chủ</a>
+          <a href="/products" className="hover:text-white">Sản phẩm</a>
+          <a href="/cart" className="hover:text-white">Giỏ hàng</a>
+        </div>
+      </div>
+    </footer>
+  );
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full">
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </div>
+      </body>
     </html>
   );
 }
