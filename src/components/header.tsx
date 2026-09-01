@@ -77,7 +77,7 @@ export default function Header() {
 
         <nav className="flex items-center gap-4 overflow-x-auto border-t border-white/10 py-3 text-sm font-medium text-white/90">
           <div className="flex items-center gap-6 whitespace-nowrap">
-            <a href="/products" className="underline decoration-white/70 underline-offset-8 transition hover:text-teal-100">
+            <a href="/" className="underline decoration-white/70 underline-offset-8 transition hover:text-teal-100">
               Cửa hàng
             </a>
             <a href="/products" className="transition hover:text-teal-100">
