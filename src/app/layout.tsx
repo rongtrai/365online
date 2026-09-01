@@ -25,7 +25,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <nav className="hidden items-center gap-6 text-sm font-medium text-white/90 md:flex">
           <a href="/" className="transition hover:text-teal-100">Trang chủ</a>
           <a href="/products" className="transition hover:text-teal-100">Sản phẩm</a>
-          <a href="/cart" className="transition hover:text-teal-100">Giỏ hàng</a>
         </nav>
       </div>
     </header>

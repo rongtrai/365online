@@ -268,25 +268,25 @@ export default function Home() {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 py-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between gap-3 py-4">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
               <button className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 lg:hidden">
                 <Menu className="h-5 w-5" />
               </button>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 via-pink-500 to-orange-400 text-[9px] font-black tracking-[-0.12em] text-white shadow-lg shadow-orange-200">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 via-emerald-500 to-cyan-500 text-[9px] font-black tracking-[-0.12em] text-white shadow-lg shadow-teal-200">
                   365
                 </div>
-                <div className="leading-none">
-                  <p className="text-xl font-black tracking-[-0.06em] text-slate-900">365online</p>
+                <div className="min-w-0 leading-none">
+                  <p className="truncate text-xl font-black tracking-[-0.06em] text-slate-900">365online</p>
                 </div>
               </div>
             </div>
 
             <div className="hidden flex-1 items-center justify-center md:flex">
               <form action="/products" method="GET" className="w-full max-w-2xl">
-                <label className="flex w-full items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm transition focus-within:border-orange-400 focus-within:bg-white focus-within:shadow-md">
+                <label className="flex w-full items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm transition focus-within:border-teal-400 focus-within:bg-white focus-within:shadow-md">
                   <Search className="h-4 w-4 text-slate-400" />
                   <input
                     aria-label="Search products"
@@ -298,7 +298,7 @@ export default function Home() {
               </form>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <button className="relative inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900 sm:px-4">
                 <Heart className="h-4 w-4" />
                 <span className="hidden sm:inline">Yêu thích</span>
@@ -311,7 +311,7 @@ export default function Home() {
                 Đăng nhập
               </a>
 
-              <a href="/cart" className="relative inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-slate-200 transition hover:bg-slate-800 sm:px-3.5">
+              <a href="/cart" className="relative inline-flex items-center gap-1.5 rounded-full bg-teal-600 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-teal-200 transition hover:bg-teal-500 sm:px-3.5">
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
                 <span className="whitespace-nowrap">Giỏ hàng</span>
                 <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
@@ -321,9 +321,9 @@ export default function Home() {
             </div>
           </div>
 
-          <nav className="flex items-center justify-between gap-4 overflow-x-auto border-t border-slate-100 py-3 text-sm font-medium text-slate-600">
-            <div className="flex items-center gap-6 whitespace-nowrap">
-              <a href="/products" className="text-slate-900 underline decoration-orange-500 underline-offset-8 transition hover:text-slate-900">
+          <div className="flex items-center justify-between gap-4 border-t border-slate-100 py-3">
+            <nav className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto whitespace-nowrap text-sm font-medium text-slate-600">
+              <a href="/products" className="text-slate-900 underline decoration-teal-500 underline-offset-8 transition hover:text-slate-900">
                 Cửa hàng
               </a>
               <a href="/products" className="transition hover:text-slate-900">
@@ -335,13 +335,13 @@ export default function Home() {
               <a href="/products" className="transition hover:text-slate-900">
                 Khuyến mãi
               </a>
-            </div>
+            </nav>
             <div className="hidden items-center gap-4 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 md:flex">
               <span>GIAO HÀNG NHANH</span>
               <span>•</span>
               <span>THANH TOÁN AN TOÀN</span>
             </div>
-          </nav>
+          </div>
         </div>
       </header>
 
