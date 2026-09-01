@@ -1,33 +1,17 @@
 "use client";
 
 import {
-  Heart,
   Menu,
   Search,
   ShoppingCart,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { create } from "zustand";
 import { useCartStore } from "@/lib/cart-store";
 import { supabase } from "@/lib/supabase";
 
-const useShopStore = create<{
-  wishlistIds: number[];
-  toggleWishlist: (id: number) => void;
-}>((set) => ({
-  wishlistIds: [1, 4],
-  toggleWishlist: (id: number) =>
-    set((state) => {
-      const wishlistIds = state.wishlistIds.includes(id)
-        ? state.wishlistIds.filter((item) => item !== id)
-        : [...state.wishlistIds, id];
-
-      return { wishlistIds };
-    }),
-}));
-
 export default function Header() {
-  const cartCount = useCartStore((state) => state.items.length);
+  const cartItems = useCartStore((state) => state.items);
+  const totalQuantity = cartItems ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -109,9 +93,9 @@ export default function Header() {
             <a href="/cart" className="relative inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-emerald-900/20 transition hover:bg-emerald-400 sm:px-3.5">
               <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
               <span className="whitespace-nowrap">Giỏ hàng</span>
-              {cartCount > 0 ? (
+              {totalQuantity > 0 ? (
                 <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
-                  {cartCount}
+                  {totalQuantity}
                 </span>
               ) : null}
             </a>
