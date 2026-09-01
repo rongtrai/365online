@@ -18,18 +18,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  const Header = () => (
-    <header className="border-b border-teal-500/20 bg-teal-600 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <div className="text-lg font-black tracking-tight text-white">365online</div>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-white/90 md:flex">
-          <a href="/" className="transition hover:text-teal-100">Trang chủ</a>
-          <a href="/products" className="transition hover:text-teal-100">Sản phẩm</a>
-        </nav>
-      </div>
-    </header>
-  );
-
   const Footer = () => (
     <footer className="mt-auto border-t border-white/20 bg-teal-700 text-teal-50">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm sm:px-6 lg:flex-row lg:px-8">
@@ -50,7 +38,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full">
         <div className="flex min-h-screen flex-col">
-          <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </div>
