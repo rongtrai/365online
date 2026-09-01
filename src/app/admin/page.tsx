@@ -379,18 +379,15 @@ export default function AdminPage() {
                 </div>
                 <select
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  value={form.category}
+                  value={form.category || ""}
                   onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}
                 >
-                  {categories.length === 0 ? (
-                    <option value="Robot, Mô hình">Robot, Mô hình</option>
-                  ) : (
-                    categories.map((category) => (
-                      <option key={category.id} value={category.name}>
-                        {category.name}
-                      </option>
-                    ))
-                  )}
+                  <option value="">-- Chọn danh mục --</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
                 <textarea
                   className="min-h-[80px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
