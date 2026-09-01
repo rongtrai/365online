@@ -163,11 +163,11 @@ const catalogProducts: Product[] = [
 ];
 
 const fallbackCategories = [
-  { name: "Robot, Mô hình", count: 24, accent: "from-sky-500 via-cyan-500 to-teal-500" },
-  { name: "Linh kiện, Thiết bị", count: 18, accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
-  { name: "Phụ kiện Robot", count: 16, accent: "from-amber-400 via-orange-500 to-rose-500" },
-  { name: "Kit phát triển", count: 32, accent: "from-emerald-500 via-teal-500 to-cyan-600" },
-  { name: "Tool, Code, Phần mềm", count: 14, accent: "from-pink-500 via-rose-500 to-red-500" },
+  { name: "Robot, Mô hình", count: 0, accent: "from-sky-500 via-cyan-500 to-teal-500" },
+  { name: "Linh kiện, Thiết bị", count: 0, accent: "from-violet-500 via-purple-500 to-fuchsia-500" },
+  { name: "Phụ kiện Robot", count: 0, accent: "from-amber-400 via-orange-500 to-rose-500" },
+  { name: "Kit phát triển", count: 0, accent: "from-emerald-500 via-teal-500 to-cyan-600" },
+  { name: "Tool, Code, Phần mềm", count: 0, accent: "from-pink-500 via-rose-500 to-red-500" },
 ];
 
 const collections = [
@@ -202,7 +202,7 @@ export default function Home() {
   const wishlistIds = useShopStore((state) => state.wishlistIds);
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
   const addToCart = useCartStore((state) => state.addItem);
-  const [categories, setCategories] = useState<typeof fallbackCategories>(fallbackCategories);
+  const [categories, setCategories] = useState<Array<{ name: string; count: number; accent: string }>>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -272,21 +272,32 @@ export default function Home() {
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
               <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
-                {categories
-                  .filter((category) => category.name !== "Tool, Code, Phần mềm")
-                  .map((category) => (
-                    <li key={category.name}>
-                      <Link
-                        href={`/products?category=${encodeURIComponent(category.name)}`}
-                        className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
-                      >
-                        <span className="truncate">{category.name}</span>
-                        <span className="inline-flex min-w-10 items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
-                          {Number(category.count ?? 0) || 0}
-                        </span>
-                      </Link>
+                {categories.length === 0 ? (
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <li key={`category-skeleton-${index}`}>
+                      <div className="flex w-full items-center justify-between rounded-xl px-2.5 py-2">
+                        <span className="h-4 w-24 animate-pulse rounded bg-slate-200" />
+                        <span className="h-5 w-8 animate-pulse rounded-full bg-slate-200" />
+                      </div>
                     </li>
-                  ))}
+                  ))
+                ) : (
+                  categories
+                    .filter((category) => category.name !== "Tool, Code, Phần mềm")
+                    .map((category) => (
+                      <li key={category.name}>
+                        <Link
+                          href={`/products?category=${encodeURIComponent(category.name)}`}
+                          className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
+                        >
+                          <span className="truncate">{category.name}</span>
+                          <span className="inline-flex min-w-10 items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                            {Number(category.count ?? 0) || 0}
+                          </span>
+                        </Link>
+                      </li>
+                    ))
+                )}
               </ul>
             </div>
 
