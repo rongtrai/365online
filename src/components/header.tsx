@@ -15,7 +15,9 @@ export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (!supabase) {
+    const client = supabase;
+
+    if (!client) {
       setIsAuthenticated(false);
       return;
     }
@@ -23,7 +25,7 @@ export default function Header() {
     const syncAuth = async () => {
       const {
         data: { session },
-      } = await supabase.auth.getSession();
+      } = await client.auth.getSession();
       setIsAuthenticated(Boolean(session?.user));
     };
 
@@ -31,7 +33,7 @@ export default function Header() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = client.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(Boolean(session?.user));
     });
 
