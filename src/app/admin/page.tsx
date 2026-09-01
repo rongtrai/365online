@@ -50,6 +50,7 @@ const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(val
 
 export default function AdminPage() {
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [liveProducts, setLiveProducts] = useState<ProductItem[]>([]);
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -158,6 +159,7 @@ export default function AdminPage() {
 
     checkAccess();
     loadData();
+    setIsMounted(true);
   }, [router]);
 
   const handleLogout = () => {
@@ -266,8 +268,15 @@ export default function AdminPage() {
 
   const revenue = orders.reduce((sum, order) => sum + order.total, 0);
 
-  if (!isLoggedIn) {
-    return null;
+  if (!isMounted || !isLoggedIn) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-6 shadow-sm">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-teal-600" />
+          <p className="text-sm font-medium text-slate-600">Đang kiểm tra quyền truy cập...</p>
+        </div>
+      </main>
+    );
   }
 
   return (
