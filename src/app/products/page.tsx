@@ -1,10 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { getCategories, getProducts } from "@/lib/storefront-data";
 import { supabase } from "@/lib/supabase";
-
-type ProductsPageProps = {
-  searchParams?: Promise<{ category?: string; q?: string; sort?: string }> | { category?: string; q?: string; sort?: string };
-};
 
 const buildProduct = (row: Record<string, unknown>) => ({
   id: Number(row.id ?? 0),
@@ -29,8 +29,8 @@ async function fetchProductsByCategory(category: string) {
     const decodedCategory = decodeURIComponent(category).trim();
     const { data, error } = await supabase.from("products").select("*").eq("category", decodedCategory);
 
-    if (error || !data) {
-      return []; 
+    if (error || !data || data.length === 0) {
+      return [];
     }
 
     return data.map(buildProduct);
@@ -39,27 +39,59 @@ async function fetchProductsByCategory(category: string) {
   }
 }
 
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const resolvedParams = await Promise.resolve(searchParams ?? {});
-  const rawCategory = typeof resolvedParams.category === "string" ? resolvedParams.category : "";
-  const decodedCategory = rawCategory ? decodeURIComponent(rawCategory).trim() : "";
-  const normalizedCategory = decodedCategory.trim();
-  const selectedCategory = normalizedCategory && normalizedCategory.toLowerCase() !== "all" ? normalizedCategory : "all";
-  const query = typeof resolvedParams.q === "string" ? resolvedParams.q.trim().toLowerCase() : "";
-  const sort = typeof resolvedParams.sort === "string" ? resolvedParams.sort : "featured";
+export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category") ?? "";
+  const decodedCategory = (() => {
+    if (!categoryParam) return "";
+    try {
+      return decodeURIComponent(categoryParam).trim();
+    } catch {
+      return categoryParam.trim();
+    }
+  })();
+  const selectedCategory = decodedCategory && decodedCategory.toLowerCase() !== "all" ? decodedCategory : "all";
+  const query = (searchParams.get("q") ?? "").trim().toLowerCase();
+  const sort = searchParams.get("sort") ?? "featured";
 
-  let categories: Awaited<ReturnType<typeof getCategories>> = [];
-  let products: Awaited<ReturnType<typeof getProducts>> = [];
+  const [categories, setCategories] = useState<Awaited<ReturnType<typeof getCategories>>>([]);
+  const [products, setProducts] = useState<Awaited<ReturnType<typeof getProducts>>>([]);
 
-  try {
-    [categories, products] = await Promise.all([
-      getCategories(),
-      selectedCategory === "all" ? getProducts() : fetchProductsByCategory(selectedCategory).then((categoryProducts) => (categoryProducts.length > 0 ? categoryProducts : getProducts())),
-    ]);
-  } catch {
-    categories = [];
-    products = [];
-  }
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProducts = async () => {
+      try {
+        const categoryList = await getCategories();
+        if (!isMounted) return;
+        setCategories(categoryList);
+
+        let nextProducts: Awaited<ReturnType<typeof getProducts>> = [];
+
+        if (selectedCategory === "all") {
+          nextProducts = await getProducts();
+        } else {
+          const matchedProducts = await fetchProductsByCategory(selectedCategory);
+          nextProducts = matchedProducts.length > 0 ? matchedProducts : await getProducts();
+        }
+
+        if (isMounted) {
+          setProducts(nextProducts);
+        }
+      } catch {
+        if (isMounted) {
+          setCategories([]);
+          setProducts([]);
+        }
+      }
+    };
+
+    loadProducts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedCategory]);
 
   const normalizeCategoryValue = (value: string) =>
     value
