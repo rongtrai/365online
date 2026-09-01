@@ -50,7 +50,7 @@ const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(val
 
 export default function AdminPage() {
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [liveProducts, setLiveProducts] = useState<ProductItem[]>([]);
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -159,7 +159,7 @@ export default function AdminPage() {
 
     checkAccess();
     loadData();
-    setIsMounted(true);
+    setMounted(true);
   }, [router]);
 
   const handleLogout = () => {
@@ -268,7 +268,7 @@ export default function AdminPage() {
 
   const revenue = orders.reduce((sum, order) => sum + order.total, 0);
 
-  if (!isMounted || !isLoggedIn) {
+  if (!mounted || !isLoggedIn) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-6 shadow-sm">
