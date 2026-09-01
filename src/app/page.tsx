@@ -200,6 +200,31 @@ export default function Home() {
   const wishlistIds = useShopStore((state) => state.wishlistIds);
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
   const addToCart = useCartStore((state) => state.addItem);
+  const articleCards: (typeof collections)[number][] = collections.length
+    ? collections
+    : [
+        {
+          title: "Cách chọn kit robot phù hợp cho người mới",
+          category: "Hướng dẫn",
+          readTime: "5 phút đọc",
+          excerpt: "Khám phá bộ kit phù hợp với mục tiêu học tập, thử nghiệm và xây dựng dự án maker cá nhân.",
+          accent: "from-indigo-500 via-violet-500 to-fuchsia-500",
+        },
+        {
+          title: "AI trong mô hình giám sát tự động",
+          category: "Công nghệ",
+          readTime: "7 phút đọc",
+          excerpt: "Ứng dụng AI vào hệ thống giám sát, nhận diện và tối ưu quy trình làm việc cho doanh nghiệp nhỏ.",
+          accent: "from-orange-400 via-pink-500 to-rose-500",
+        },
+        {
+          title: "Lựa chọn phụ kiện văn phòng thông minh cho không gian làm việc",
+          category: "Đời sống",
+          readTime: "6 phút đọc",
+          excerpt: "Tận dụng các thiết bị hỗ trợ tập trung, sáng tạo và nâng cao hiệu quả công việc mỗi ngày.",
+          accent: "from-emerald-500 via-teal-500 to-cyan-500",
+        },
+      ];
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -527,8 +552,8 @@ export default function Home() {
           <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
             <div className="mb-6 flex items-end justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">SẢN PHẨM</p>
-                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bộ sưu tập gợi ý cho bạn</h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BÀI VIẾT</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bài viết chia sẻ</h2>
               </div>
               <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
                 Xem tất cả
@@ -536,9 +561,12 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-3">
-              {collections.map((collection) => (
-                <article key={collection.title} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {articleCards.map((collection) => (
+                <article
+                  key={collection.title}
+                  className="group overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-200/70"
+                >
                   <div className={`relative h-52 bg-gradient-to-br ${collection.accent} p-4`}>
                     <div className="flex h-full items-start justify-between">
                       <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
@@ -551,13 +579,26 @@ export default function Home() {
                   </div>
 
                   <div className="p-5">
-                    <h3 className="text-xl font-bold leading-tight text-slate-900">{collection.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{collection.excerpt}</p>
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1">AI</span>
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1">Robot</span>
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1">Tips</span>
+                    </div>
 
-                    <a href="/products" className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2.5 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">
-                      Khám phá ngay
-                      <ArrowRight className="h-4 w-4" />
-                    </a>
+                    <h3 className="text-xl font-bold leading-tight text-slate-900 transition group-hover:text-slate-700">
+                      {collection.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                      {collection.excerpt}
+                    </p>
+
+                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                      <span className="text-xs font-medium text-slate-500">5 phút đọc</span>
+                      <a href="/products" className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 transition group-hover:text-orange-700">
+                        Đọc tiếp
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
                 </article>
               ))}
