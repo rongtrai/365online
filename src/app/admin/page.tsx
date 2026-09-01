@@ -98,25 +98,57 @@ export default function AdminPage() {
           setOrders(demoOrders);
         }
 
-        if (categoriesRes.ok) {
-          const categoriesData = await categoriesRes.json();
-          const mappedCategories = Array.isArray(categoriesData)
-            ? categoriesData
-                .map((category: { id?: number; name?: string }) => ({
-                  id: Number(category.id ?? 0),
-                  name: String(category.name ?? "Khác"),
-                }))
-                .filter((category) => category.name && category.id)
-            : [];
-          setCategories(mappedCategories);
-          if (mappedCategories.length > 0) {
-            setForm((current) => ({
-              ...current,
-              category: current.category && mappedCategories.some((category) => category.name === current.category)
-                ? current.category
-                : mappedCategories[0].name,
-            }));
+        try {
+          if (supabase) {
+            const { data, error } = await supabase.from("categories").select("*");
+
+            if (error) {
+              console.error("Error fetching categories:", error);
+              setCategories([]);
+              return;
+            }
+
+            const mappedCategories = Array.isArray(data)
+              ? data
+                  .map((category: { id?: number; name?: string }) => ({
+                    id: Number(category.id ?? 0),
+                    name: String(category.name ?? "Khác"),
+                  }))
+                  .filter((category) => category.name && category.id)
+              : [];
+
+            setCategories(mappedCategories);
+            if (mappedCategories.length > 0) {
+              setForm((current) => ({
+                ...current,
+                category: current.category && mappedCategories.some((category) => category.name === current.category)
+                  ? current.category
+                  : mappedCategories[0].name,
+              }));
+            }
+          } else if (categoriesRes.ok) {
+            const categoriesData = await categoriesRes.json();
+            const mappedCategories = Array.isArray(categoriesData)
+              ? categoriesData
+                  .map((category: { id?: number; name?: string }) => ({
+                    id: Number(category.id ?? 0),
+                    name: String(category.name ?? "Khác"),
+                  }))
+                  .filter((category) => category.name && category.id)
+              : [];
+            setCategories(mappedCategories);
+            if (mappedCategories.length > 0) {
+              setForm((current) => ({
+                ...current,
+                category: current.category && mappedCategories.some((category) => category.name === current.category)
+                  ? current.category
+                  : mappedCategories[0].name,
+              }));
+            }
           }
+        } catch (fetchError) {
+          console.error("Failed to fetch categories:", fetchError);
+          setCategories([]);
         }
       } catch {
         setLiveProducts([]);
@@ -383,7 +415,7 @@ export default function AdminPage() {
                   onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}
                 >
                   <option value="">-- Chọn danh mục --</option>
-                  {categories.map((category) => (
+                  {categories?.map((category) => (
                     <option key={category.id} value={category.name}>
                       {category.name}
                     </option>
