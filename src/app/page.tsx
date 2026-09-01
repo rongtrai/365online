@@ -18,6 +18,7 @@ import {
   Globe,
   MessageCircle,
 } from "lucide-react";
+import Link from "next/link";
 import { create } from "zustand";
 import { useCartStore } from "@/lib/cart-store";
 
@@ -317,13 +318,13 @@ export default function Home() {
                   .filter((category) => category.name !== "Tool, Code, Phần mềm")
                   .map((category) => (
                     <li key={category.name}>
-                      <a
+                      <Link
                         href={`/products?category=${encodeURIComponent(category.name)}`}
                         className="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-slate-100 hover:text-slate-900"
                       >
                         <span className="truncate">{category.name}</span>
                         <span className="text-[10px] text-slate-400">({category.count.split(" ")[0]})</span>
-                      </a>
+                      </Link>
                     </li>
                   ))}
               </ul>
@@ -408,63 +409,72 @@ export default function Home() {
                 const isSaved = wishlistIds.includes(product.id);
 
                 return (
-                  <article
+                  <Link
                     key={product.id}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                    href={`/products/${product.id}`}
+                    className="group block h-full"
                   >
-                    <div className="relative overflow-hidden rounded-2xl bg-slate-100">
-                      <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                        <div className="flex h-full items-start justify-between">
-                          <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                            {product.badge}
+                    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80">
+                      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                        <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                          <div className="flex h-full items-start justify-between">
+                            <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                              {product.badge}
+                            </div>
+                            <button
+                              aria-label={`Toggle wishlist for ${product.name}`}
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                toggleWishlist(product.id);
+                              }}
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                            >
+                              <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                            </button>
                           </div>
-                          <button
-                            aria-label={`Toggle wishlist for ${product.name}`}
-                            onClick={() => toggleWishlist(product.id)}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
-                          >
-                            <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
-                          </button>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="mt-4 flex flex-1 flex-col">
-                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
+                      <div className="mt-4 flex flex-1 flex-col">
+                        <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
 
-                      <div className="mt-3 flex items-center gap-1 text-amber-400">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
-                        ))}
-                        <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
-                      </div>
+                        <div className="mt-3 flex items-center gap-1 text-amber-400">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                          ))}
+                          <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                        </div>
 
-                      <div className="mt-auto pt-3">
-                        <div className="flex min-h-[42px] items-center justify-between gap-2">
-                          <div className="min-w-0 flex items-baseline gap-2">
-                            <span className="text-xl font-black text-slate-900">${product.price}</span>
-                            <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                        <div className="mt-auto pt-3">
+                          <div className="flex min-h-[42px] items-center justify-between gap-2">
+                            <div className="min-w-0 flex items-baseline gap-2">
+                              <span className="text-xl font-black text-slate-900">${product.price}</span>
+                              <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                            </div>
+                            <button
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                addToCart({
+                                  id: product.id,
+                                  name: product.name,
+                                  price: product.price,
+                                  originalPrice: product.originalPrice,
+                                  badge: product.badge,
+                                  accent: product.accent,
+                                  category: "Robot, Mô hình",
+                                });
+                              }}
+                              className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
+                            >
+                              Thêm vào giỏ
+                            </button>
                           </div>
-                          <button
-                            onClick={() =>
-                              addToCart({
-                                id: product.id,
-                                name: product.name,
-                                price: product.price,
-                                originalPrice: product.originalPrice,
-                                badge: product.badge,
-                                accent: product.accent,
-                                category: "Robot, Mô hình",
-                              })
-                            }
-                            className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
-                          >
-                            Thêm vào giỏ
-                          </button>
                         </div>
                       </div>
-                    </div>
-                  </article>
+                    </article>
+                  </Link>
                 );
               })}
             </div>
@@ -487,63 +497,72 @@ export default function Home() {
                 const isSaved = wishlistIds.includes(product.id);
 
                 return (
-                  <article
+                  <Link
                     key={product.id}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80"
+                    href={`/products/${product.id}`}
+                    className="group block h-full"
                   >
-                    <div className="relative overflow-hidden rounded-2xl bg-slate-100">
-                      <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
-                        <div className="flex h-full items-start justify-between">
-                          <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
-                            {product.badge}
+                    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/80">
+                      <div className="relative overflow-hidden rounded-2xl bg-slate-100">
+                        <div className={`h-52 bg-gradient-to-br ${product.accent} p-4`}>
+                          <div className="flex h-full items-start justify-between">
+                            <div className="inline-flex rounded-full bg-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                              {product.badge}
+                            </div>
+                            <button
+                              aria-label={`Toggle wishlist for ${product.name}`}
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                toggleWishlist(product.id);
+                              }}
+                              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
+                            >
+                              <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
+                            </button>
                           </div>
-                          <button
-                            aria-label={`Toggle wishlist for ${product.name}`}
-                            onClick={() => toggleWishlist(product.id)}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm"
-                          >
-                            <Heart className={`h-4 w-4 ${isSaved ? "fill-current text-rose-200" : ""}`} />
-                          </button>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="mt-4 flex flex-1 flex-col">
-                      <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
+                      <div className="mt-4 flex flex-1 flex-col">
+                        <p className="line-clamp-2 text-sm font-semibold text-slate-800">{product.name}</p>
 
-                      <div className="mt-3 flex items-center gap-1 text-amber-400">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
-                        ))}
-                        <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
-                      </div>
+                        <div className="mt-3 flex items-center gap-1 text-amber-400">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(product.rating) ? "fill-current" : "text-slate-300 fill-none"}`} />
+                          ))}
+                          <span className="ml-1 text-xs font-medium text-slate-500">{product.rating}</span>
+                        </div>
 
-                      <div className="mt-auto pt-3">
-                        <div className="flex min-h-[42px] items-center justify-between gap-2">
-                          <div className="min-w-0 flex items-baseline gap-2">
-                            <span className="text-xl font-black text-slate-900">${product.price}</span>
-                            <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                        <div className="mt-auto pt-3">
+                          <div className="flex min-h-[42px] items-center justify-between gap-2">
+                            <div className="min-w-0 flex items-baseline gap-2">
+                              <span className="text-xl font-black text-slate-900">${product.price}</span>
+                              <span className="text-sm text-slate-400 line-through">${product.originalPrice}</span>
+                            </div>
+                            <button
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                addToCart({
+                                  id: product.id,
+                                  name: product.name,
+                                  price: product.price,
+                                  originalPrice: product.originalPrice,
+                                  badge: product.badge,
+                                  accent: product.accent,
+                                  category: "Robot, Mô hình",
+                                });
+                              }}
+                              className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
+                            >
+                              Thêm vào giỏ
+                            </button>
                           </div>
-                          <button
-                            onClick={() =>
-                              addToCart({
-                                id: product.id,
-                                name: product.name,
-                                price: product.price,
-                                originalPrice: product.originalPrice,
-                                badge: product.badge,
-                                accent: product.accent,
-                                category: "Robot, Mô hình",
-                              })
-                            }
-                            className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
-                          >
-                            Thêm vào giỏ
-                          </button>
                         </div>
                       </div>
-                    </div>
-                  </article>
+                    </article>
+                  </Link>
                 );
               })}
             </div>
