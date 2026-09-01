@@ -78,7 +78,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 border-t border-white/20 pt-6 text-sm text-teal-100">
-          <p>© 2026 365online. All rights reserved.</p>
+          <p>© 2026 365online. Mọi quyền được bảo lưu.</p>
         </div>
       </div>
     </footer>
