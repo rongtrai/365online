@@ -377,34 +377,6 @@ export default function Home() {
             </section>
 
             <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-3 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">Khám phá</p>
-                  <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900">Danh mục nổi bật</h2>
-                </div>
-                <a href="/products" className="text-sm font-semibold text-slate-700 hover:text-slate-900">Xem tất cả →</a>
-              </div>
-              <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_1fr]">
-                {categories.map((category) => (
-                  <a
-                    key={category.name}
-                    href={`/products?category=${encodeURIComponent(category.name)}`}
-                    className="group overflow-hidden rounded-[20px] border border-slate-200 bg-slate-50 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
-                  >
-                    <div className={`h-20 bg-gradient-to-br ${category.accent}`} />
-                    <div className="flex items-center justify-between gap-3 p-3">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">Danh mục</p>
-                        <p className="mt-1 text-sm font-bold text-slate-900">{category.name}</p>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-slate-400 transition group-hover:text-slate-900" />
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
-
-            <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
               <div className="grid gap-4 md:grid-cols-4">
                 {[
                   { title: "Giao hàng nhanh", text: "Vận chuyển trong 24-48h toàn quốc", icon: Truck },
@@ -499,14 +471,6 @@ export default function Home() {
                     </article>
                   );
                 })}
-              </div>
-            </section>
-
-            <section className="rounded-[28px] border border-slate-200 bg-gradient-to-r from-orange-50 via-white to-sky-50 p-4 shadow-sm sm:p-6 lg:p-8">
-              <div className="flex min-h-[120px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-200 bg-white/70 text-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Tài trợ</p>
-                <p className="mt-2 text-lg font-bold text-slate-900 sm:text-xl">Banner quảng cáo robot & kit</p>
-                <p className="mt-1 text-sm text-slate-500">Vị trí quảng cáo giữa nội dung sản phẩm và bài viết chuyên mục</p>
               </div>
             </section>
 
