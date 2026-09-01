@@ -378,25 +378,6 @@ export default function Home() {
           </div>
 
           <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {[
-                { title: "Giao hàng nhanh", text: "Vận chuyển trong 24-48h toàn quốc", icon: Truck },
-                { title: "Bảo hành rõ ràng", text: "Hỗ trợ chính hãng và đổi trả minh bạch", icon: ShieldCheck },
-                { title: "Hỗ trợ 24/7", text: "Tư vấn trước và sau mua hàng", icon: Headphones },
-                { title: "Ưu đãi mỗi tháng", text: "Flash sale và combo giá tốt", icon: BadgePercent },
-              ].map(({ title, text, icon: Icon }) => (
-                <div key={title} className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="mt-4 text-base font-bold text-slate-900">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">NỔI BẬT</p>
@@ -595,6 +576,27 @@ export default function Home() {
           </section>
         </div>
       </div>
+
+      <section className="mx-auto mt-8 max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              { title: "Giao hàng nhanh", text: "Vận chuyển trong 24-48h toàn quốc", icon: Truck },
+              { title: "Bảo hành rõ ràng", text: "Hỗ trợ chính hãng và đổi trả minh bạch", icon: ShieldCheck },
+              { title: "Hỗ trợ 24/7", text: "Tư vấn trước và sau mua hàng", icon: Headphones },
+              { title: "Ưu đãi mỗi tháng", text: "Flash sale và combo giá tốt", icon: BadgePercent },
+            ].map(({ title, text, icon: Icon }) => (
+              <div key={title} className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 text-base font-bold text-slate-900">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <footer className="mt-16 border-t border-slate-200 bg-slate-950 text-slate-200">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
