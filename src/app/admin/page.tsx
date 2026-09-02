@@ -1,6 +1,7 @@
 "use client";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
 import Link from "next/link";
@@ -53,7 +54,7 @@ const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(val
 
 export default function AdminPage() {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [liveProducts, setLiveProducts] = useState<ProductItem[]>([]);
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -64,11 +65,11 @@ export default function AdminPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setMounted(true);
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!isMounted) return;
 
     const checkAccess = async () => {
       if (isSupabaseConfigured && supabase) {
@@ -168,7 +169,7 @@ export default function AdminPage() {
 
     checkAccess();
     loadData();
-  }, [mounted, router]);
+  }, [isMounted, router]);
 
   const handleLogout = () => {
     if (isSupabaseConfigured && supabase) {
@@ -276,7 +277,7 @@ export default function AdminPage() {
 
   const revenue = orders.reduce((sum, order) => sum + order.total, 0);
 
-  if (!mounted || !isLoggedIn) {
+  if (!isMounted || !isLoggedIn) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-orange-500" />
