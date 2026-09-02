@@ -5,18 +5,11 @@ import {
   BadgePercent,
   ChevronRight,
   Heart,
-  Menu,
-  Search,
-  ShoppingCart,
+  Headphones,
+  ShieldCheck,
   Sparkles,
   Star,
   Truck,
-  ShieldCheck,
-  CreditCard,
-  Headphones,
-  Camera,
-  Globe,
-  MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -198,14 +191,20 @@ const collections = [
 ];
 
 export default function Home() {
-  const cartCount = useCartStore((state) => state.itemCount);
+  const [isMounted, setIsMounted] = useState(false);
   const wishlistIds = useShopStore((state) => state.wishlistIds);
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
   const addToCart = useCartStore((state) => state.addItem);
   const [categories, setCategories] = useState<Array<{ name: string; count: number; accent: string }>>([]);
 
   useEffect(() => {
-    let isMounted = true;
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    let isActive = true;
 
     const loadCategories = async () => {
       try {
@@ -213,7 +212,7 @@ export default function Home() {
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
 
-        if (!isMounted) return;
+        if (!isActive) return;
 
         const nextCategories = Array.isArray(data)
           ? data.map((category: { name?: string; count?: number | string; product_count?: number | string; accent?: string }) => ({
@@ -225,7 +224,7 @@ export default function Home() {
 
         setCategories(nextCategories);
       } catch {
-        if (isMounted) {
+        if (isActive) {
           setCategories(fallbackCategories);
         }
       }
@@ -234,9 +233,9 @@ export default function Home() {
     loadCategories();
 
     return () => {
-      isMounted = false;
+      isActive = false;
     };
-  }, []);
+  }, [isMounted]);
 
   const articleCards: (typeof collections)[number][] = collections.length
     ? collections
@@ -264,12 +263,16 @@ export default function Home() {
         },
       ];
 
-  const sidebarCategories = categories.length ? categories : fallbackCategories;
+  const sidebarCategories = isMounted && categories.length ? categories : fallbackCategories;
+
+  // Suppress hydration mismatch for wishlist state (client-only)
+  const resolvedWishlistIds = isMounted ? wishlistIds : [1, 4];
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start">
+          {/* ── Sidebar ── */}
           <aside className="w-full space-y-4">
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500">Danh mục</p>
@@ -303,6 +306,7 @@ export default function Home() {
             </div>
           </aside>
 
+          {/* ── Hero Banner ── */}
           <div className="space-y-6">
             <section className="overflow-hidden rounded-[24px] border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-5 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.9)]">
               <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
@@ -312,7 +316,7 @@ export default function Home() {
                     365online marketplace
                   </div>
                   <h1 className="max-w-xl text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-                    Mua sắm thông minh cho công việc, học tập & sáng tạo
+                    Mua sắm thông minh cho công việc, học tập &amp; sáng tạo
                   </h1>
                   <p className="mt-4 max-w-lg text-sm text-slate-300 sm:text-base">
                     Khám phá robot, cảm biến AI, thiết bị văn phòng và linh kiện kỹ thuật số được chọn lọc để giúp bạn làm việc nhanh hơn, sáng tạo tốt hơn và vận hành hiệu quả hơn.
@@ -354,6 +358,7 @@ export default function Home() {
             </section>
           </div>
 
+          {/* ── Featured / Best Seller Products ── */}
           <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
@@ -368,7 +373,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
               {products.slice(0, 4).map((product) => {
-                const isSaved = wishlistIds.includes(product.id);
+                const isSaved = resolvedWishlistIds.includes(product.id);
 
                 return (
                   <Link
@@ -442,6 +447,7 @@ export default function Home() {
             </div>
           </section>
 
+          {/* ── Explore More Products ── */}
           <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
             <div className="mb-6 flex items-end justify-between gap-4">
               <div>
@@ -456,7 +462,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
               {catalogProducts.slice(0, 8).map((product) => {
-                const isSaved = wishlistIds.includes(product.id);
+                const isSaved = resolvedWishlistIds.includes(product.id);
 
                 return (
                   <Link
@@ -530,11 +536,12 @@ export default function Home() {
             </div>
           </section>
 
+          {/* ── Promo Collection Cards ── */}
           <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
             <div className="mb-6 flex items-end justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BÀI VIẾT</p>
-                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bài viết chia sẻ</h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BỘ SƯU TẬP</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bộ sưu tập nổi bật</h2>
               </div>
               <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
                 Xem tất cả
@@ -576,7 +583,7 @@ export default function Home() {
                     <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
                       <span className="text-xs font-medium text-slate-500">5 phút đọc</span>
                       <a href="/products" className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 transition group-hover:text-orange-700">
-                        Đọc tiếp
+                        Khám phá
                         <ArrowRight className="h-4 w-4" />
                       </a>
                     </div>
@@ -588,6 +595,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* ── Trust Badges ── */}
       <section className="mx-auto mt-8 max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -608,8 +616,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
     </main>
   );
 }

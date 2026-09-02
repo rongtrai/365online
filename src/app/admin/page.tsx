@@ -61,6 +61,10 @@ export default function AdminPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     const checkAccess = async () => {
       if (isSupabaseConfigured && supabase) {
         const { data } = await supabase.auth.getSession();
@@ -159,7 +163,6 @@ export default function AdminPage() {
 
     checkAccess();
     loadData();
-    setMounted(true);
   }, [router]);
 
   const handleLogout = () => {
