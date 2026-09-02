@@ -79,7 +79,7 @@ function AdminContent() {
           return;
         }
 
-        const demoUser = localStorage.getItem("365online_demo_user");
+        const demoUser = typeof window !== "undefined" ? localStorage.getItem("365online_demo_user") : null;
         const loggedIn = Boolean(demoUser);
         setIsLoggedIn(loggedIn);
         if (!loggedIn) {
@@ -87,7 +87,7 @@ function AdminContent() {
         }
       } catch (error) {
         console.error("Admin auth check failed:", error);
-        const demoUser = localStorage.getItem("365online_demo_user");
+        const demoUser = typeof window !== "undefined" ? localStorage.getItem("365online_demo_user") : null;
         const loggedIn = Boolean(demoUser);
         setIsLoggedIn(loggedIn);
         if (!loggedIn) {

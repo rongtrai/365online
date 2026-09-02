@@ -22,6 +22,7 @@ export default function Header() {
   }
 
   useEffect(() => {
+    let isMounted = true;
     const client = supabase;
 
     if (!client) {
@@ -30,23 +31,21 @@ export default function Header() {
       return;
     }
 
-    let mounted = true;
-
     const syncAuth = async () => {
       try {
         const {
           data: { session },
         } = await client.auth.getSession();
 
-        if (mounted) {
+        if (isMounted) {
           setUser(session?.user ?? null);
         }
       } catch {
-        if (mounted) {
+        if (isMounted) {
           setUser(null);
         }
       } finally {
-        if (mounted) {
+        if (isMounted) {
           setLoading(false);
         }
       }
@@ -57,13 +56,13 @@ export default function Header() {
     const {
       data: { subscription },
     } = client.auth.onAuthStateChange((_event, session) => {
-      if (mounted) {
+      if (isMounted) {
         setUser(session?.user ?? null);
       }
     });
 
     return () => {
-      mounted = false;
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -102,7 +101,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            {!loading && user ? (
+            {!loading && user !== null ? (
               <button
                 type="button"
                 onClick={async () => {
