@@ -17,10 +17,6 @@ export default function Header() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  if (pathname.startsWith("/admin")) {
-    return null;
-  }
-
   useEffect(() => {
     let isMounted = true;
     const client = supabase;
@@ -66,6 +62,10 @@ export default function Header() {
       subscription.unsubscribe();
     };
   }, []);
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-teal-500/20 bg-teal-800 text-white shadow-sm backdrop-blur-xl">

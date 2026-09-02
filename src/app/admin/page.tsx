@@ -72,9 +72,16 @@ function AdminContent() {
       try {
         if (isSupabaseConfigured && supabase) {
           const { data } = await supabase.auth.getSession();
-          setIsLoggedIn(Boolean(data.session));
-          if (!data.session) {
-            router.replace("/login");
+          const userLoggedIn = Boolean(data.session);
+          setIsLoggedIn(userLoggedIn);
+          if (!userLoggedIn) {
+            setTimeout(() => {
+              try {
+                router.replace("/login");
+              } catch (redirectError) {
+                console.error("Admin redirect failed:", redirectError);
+              }
+            }, 0);
           }
           return;
         }
@@ -83,7 +90,13 @@ function AdminContent() {
         const loggedIn = Boolean(demoUser);
         setIsLoggedIn(loggedIn);
         if (!loggedIn) {
-          router.replace("/login");
+          setTimeout(() => {
+            try {
+              router.replace("/login");
+            } catch (redirectError) {
+              console.error("Admin redirect failed:", redirectError);
+            }
+          }, 0);
         }
       } catch (error) {
         console.error("Admin auth check failed:", error);
@@ -91,7 +104,13 @@ function AdminContent() {
         const loggedIn = Boolean(demoUser);
         setIsLoggedIn(loggedIn);
         if (!loggedIn) {
-          router.replace("/login");
+          setTimeout(() => {
+            try {
+              router.replace("/login");
+            } catch (redirectError) {
+              console.error("Admin redirect failed:", redirectError);
+            }
+          }, 0);
         }
       }
     };
