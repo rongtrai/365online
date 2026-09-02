@@ -481,7 +481,7 @@ function AdminContent() {
               activeAdminTab === "posts" ? "bg-slate-900 text-white shadow-sm" : "text-slate-600 hover:text-slate-900",
             ].join(" ")}
           >
-            Quản lý Bài viết chia sẻ
+            Quản lý Bài viết
           </button>
         </div>
 
