@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { useCartStore } from "@/lib/cart-store";
+import { supabase } from "@/lib/supabase";
 
 const useShopStore = create<{
   wishlistIds: number[];
@@ -196,10 +197,69 @@ export default function Home() {
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
   const addToCart = useCartStore((state) => state.addItem);
   const [categories, setCategories] = useState<Array<{ name: string; count: number; accent: string }>>([]);
+  const [toolPosts, setToolPosts] = useState<Array<{ id: number; title: string; category: string; content: string; created_at?: string }>>([]);
+  const [toolPostsLoading, setToolPostsLoading] = useState(true);
+  const [toolPostsError, setToolPostsError] = useState("");
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    let isActive = true;
+
+    const loadToolPosts = async () => {
+      try {
+        if (!supabase) {
+          setToolPosts([]);
+          setToolPostsLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("posts")
+          .select("*")
+          .eq("category", "Tool & Code")
+          .order("created_at", { ascending: false })
+          .limit(3);
+
+        if (!isActive) return;
+
+        if (error) {
+          throw error;
+        }
+
+        setToolPosts(
+          Array.isArray(data)
+            ? data.map((post) => ({
+                id: Number(post.id),
+                title: String(post.title ?? "Untitled"),
+                category: String(post.category ?? "Tool & Code"),
+                content: String(post.content ?? ""),
+                created_at: post.created_at ?? undefined,
+              }))
+            : []
+        );
+      } catch {
+        if (isActive) {
+          setToolPosts([]);
+          setToolPostsError("Không thể tải bài viết Tool & Code lúc này.");
+        }
+      } finally {
+        if (isActive) {
+          setToolPostsLoading(false);
+        }
+      }
+    };
+
+    loadToolPosts();
+
+    return () => {
+      isActive = false;
+    };
+  }, [isMounted]);
 
   useEffect(() => {
     if (!isMounted) return;
@@ -540,56 +600,80 @@ export default function Home() {
           <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
             <div className="mb-6 flex items-end justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">BỘ SƯU TẬP</p>
-                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bộ sưu tập nổi bật</h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">TOOL, CODE &amp; PHẦN MỀM</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Bài viết Tool &amp; Code mới nhất</h2>
               </div>
-              <a href="/products" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
+              <a href="/posts?category=Tool%20%26%20Code" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
                 Xem tất cả
                 <ChevronRight className="h-4 w-4" />
               </a>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {articleCards.map((collection) => (
-                <article
-                  key={collection.title}
-                  className="group overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-200/70"
-                >
-                  <div className={`relative h-52 bg-gradient-to-br ${collection.accent} p-4`}>
-                    <div className="flex h-full items-start justify-between">
-                      <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                        {collection.category}
-                      </span>
-                      <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
-                        {collection.readTime}
-                      </span>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {toolPostsLoading ? (
+                Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
+                    <div className="h-52 animate-pulse bg-slate-200" />
+                    <div className="p-5">
+                      <div className="mb-4 h-4 w-24 animate-pulse rounded-full bg-slate-200" />
+                      <div className="mb-3 h-6 w-3/4 animate-pulse rounded bg-slate-200" />
+                      <div className="mb-2 h-4 w-full animate-pulse rounded bg-slate-200" />
+                      <div className="h-4 w-5/6 animate-pulse rounded bg-slate-200" />
                     </div>
                   </div>
-
-                  <div className="p-5">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1">AI</span>
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1">Robot</span>
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1">Tips</span>
+                ))
+              ) : toolPostsError ? (
+                <div className="col-span-full rounded-[20px] border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                  {toolPostsError}
+                </div>
+              ) : toolPosts.length === 0 ? (
+                <div className="col-span-full rounded-[20px] border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-600">
+                  Chưa có bài viết Tool &amp; Code nào mới.
+                </div>
+              ) : (
+                toolPosts.map((post) => (
+                  <article
+                    key={post.id}
+                    className="group overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-200/70"
+                  >
+                    <div className="relative h-52 bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-4">
+                      <div className="flex h-full items-start justify-between">
+                        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
+                          {post.category}
+                        </span>
+                        <span className="rounded-full bg-slate-900/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+                          {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "Mới"}
+                        </span>
+                      </div>
                     </div>
 
-                    <h3 className="text-xl font-bold leading-tight text-slate-900 transition group-hover:text-slate-700">
-                      {collection.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">
-                      {collection.excerpt}
-                    </p>
+                    <div className="p-5">
+                      <div className="mb-3 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1">Tool</span>
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1">Code</span>
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1">Software</span>
+                      </div>
 
-                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                      <span className="text-xs font-medium text-slate-500">5 phút đọc</span>
-                      <a href="/products" className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 transition group-hover:text-orange-700">
-                        Khám phá
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
+                      <h3 className="text-xl font-bold leading-tight text-slate-900 transition group-hover:text-slate-700">
+                        {post.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">
+                        {post.content.length > 140 ? `${post.content.slice(0, 140).trim()}...` : post.content}
+                      </p>
+
+                      <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                        <span className="text-xs font-medium text-slate-500">
+                          {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "Mới"}
+                        </span>
+                        <Link href="/posts" className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 transition group-hover:text-orange-700">
+                          Khám phá
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                ))
+              )}
             </div>
           </section>
         </div>
