@@ -69,20 +69,30 @@ function AdminContent() {
     if (!isMounted) return;
 
     const checkAccess = async () => {
-      if (isSupabaseConfigured && supabase) {
-        const { data } = await supabase.auth.getSession();
-        setIsLoggedIn(Boolean(data.session));
-        if (!data.session) {
+      try {
+        if (isSupabaseConfigured && supabase) {
+          const { data } = await supabase.auth.getSession();
+          setIsLoggedIn(Boolean(data.session));
+          if (!data.session) {
+            router.replace("/login");
+          }
+          return;
+        }
+
+        const demoUser = localStorage.getItem("365online_demo_user");
+        const loggedIn = Boolean(demoUser);
+        setIsLoggedIn(loggedIn);
+        if (!loggedIn) {
           router.replace("/login");
         }
-        return;
-      }
-
-      const demoUser = localStorage.getItem("365online_demo_user");
-      const loggedIn = Boolean(demoUser);
-      setIsLoggedIn(loggedIn);
-      if (!loggedIn) {
-        router.replace("/login");
+      } catch (error) {
+        console.error("Admin auth check failed:", error);
+        const demoUser = localStorage.getItem("365online_demo_user");
+        const loggedIn = Boolean(demoUser);
+        setIsLoggedIn(loggedIn);
+        if (!loggedIn) {
+          router.replace("/login");
+        }
       }
     };
 

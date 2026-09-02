@@ -14,7 +14,8 @@ export default function Header() {
   const pathname = usePathname();
   const cartItems = useCartStore((state) => state.items);
   const totalQuantity = cartItems ? cartItems.reduce((acc, item) => acc + item.quantity, 0) : 0;
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -24,15 +25,31 @@ export default function Header() {
     const client = supabase;
 
     if (!client) {
-      setIsAuthenticated(false);
+      setUser(null);
+      setLoading(false);
       return;
     }
 
+    let mounted = true;
+
     const syncAuth = async () => {
-      const {
-        data: { session },
-      } = await client.auth.getSession();
-      setIsAuthenticated(Boolean(session?.user));
+      try {
+        const {
+          data: { session },
+        } = await client.auth.getSession();
+
+        if (mounted) {
+          setUser(session?.user ?? null);
+        }
+      } catch {
+        if (mounted) {
+          setUser(null);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
     };
 
     syncAuth();
@@ -40,10 +57,15 @@ export default function Header() {
     const {
       data: { subscription },
     } = client.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(Boolean(session?.user));
+      if (mounted) {
+        setUser(session?.user ?? null);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
@@ -80,7 +102,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            {isAuthenticated ? (
+            {!loading && user ? (
               <button
                 type="button"
                 onClick={async () => {
@@ -92,11 +114,11 @@ export default function Header() {
               >
                 Đăng xuất
               </button>
-            ) : (
+            ) : !loading ? (
               <a href="/login" className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/15 hover:text-teal-100">
                 Đăng nhập
               </a>
-            )}
+            ) : null}
 
             <a href="/cart" className="relative inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-2 text-[11px] font-semibold text-white shadow-lg shadow-emerald-900/20 transition hover:bg-emerald-400 sm:px-3.5">
               <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
