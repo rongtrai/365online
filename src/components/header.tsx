@@ -5,7 +5,7 @@ import {
   Search,
   ShoppingCart,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { supabase } from "@/lib/supabase";
@@ -128,17 +128,49 @@ export default function Header() {
         </div>
 
         <nav className="flex items-center gap-4 overflow-x-auto border-t border-white/10 py-3 text-sm font-medium text-white/90">
-          <div className="flex items-center gap-6 whitespace-nowrap">
-            <a href="/" className="transition hover:text-teal-100">
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            <a
+              href="/"
+              className={[
+                "rounded-lg px-3 py-1.5 transition-all duration-200 ease-in-out",
+                pathname === "/"
+                  ? "border border-white/30 bg-white/20 text-white shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white",
+              ].join(" ")}
+            >
               Cửa hàng
             </a>
-            <a href="/posts?category=Tool%20%26%20Code" className="transition hover:text-teal-100">
+            <a
+              href="/posts?category=Tool%20%26%20Code"
+              className={[
+                "rounded-lg px-3 py-1.5 transition-all duration-200 ease-in-out",
+                pathname.startsWith("/posts") && useSearchParams().get("category") === "Tool & Code"
+                  ? "border border-white/30 bg-white/20 text-white shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white",
+              ].join(" ")}
+            >
               Tool, Code, Phần mềm
             </a>
-            <a href="/posts?category=B%C3%A0i%20vi%E1%BA%BFt%20chia%20s%E1%BA%BB" className="transition hover:text-teal-100">
+            <a
+              href="/posts?category=B%C3%A0i%20vi%E1%BA%BFt%20chia%20s%E1%BA%BB"
+              className={[
+                "rounded-lg px-3 py-1.5 transition-all duration-200 ease-in-out",
+                pathname.startsWith("/posts") && useSearchParams().get("category") === "Bài viết chia sẻ"
+                  ? "border border-white/30 bg-white/20 text-white shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white",
+              ].join(" ")}
+            >
               Bài viết chia sẻ
             </a>
-            <a href="/posts?category=Khuy%E1%BA%BFn%20m%C3%A3i" className="transition hover:text-teal-100">
+            <a
+              href="/posts?category=Khuy%E1%BA%BFn%20m%C3%A3i"
+              className={[
+                "rounded-lg px-3 py-1.5 transition-all duration-200 ease-in-out",
+                pathname.startsWith("/posts") && useSearchParams().get("category") === "Khuyến mãi"
+                  ? "border border-white/30 bg-white/20 text-white shadow-sm"
+                  : "text-white/80 hover:bg-white/10 hover:text-white",
+              ].join(" ")}
+            >
               Khuyến mãi
             </a>
           </div>
