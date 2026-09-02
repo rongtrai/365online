@@ -1,7 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
@@ -50,7 +49,7 @@ const lowStock = [
 
 const formatMoney = (value: number) => new Intl.NumberFormat("vi-VN").format(value) + "đ";
 
-export default function AdminPage() {
+function AdminContent() {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -490,3 +489,12 @@ export default function AdminPage() {
     </main>
   );
 }
+
+export default dynamic(() => Promise.resolve(AdminContent), {
+  ssr: false,
+  loading: () => (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-orange-500" />
+    </div>
+  ),
+});
