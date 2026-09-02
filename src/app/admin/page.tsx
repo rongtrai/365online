@@ -60,6 +60,7 @@ function AdminContent() {
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [activeAdminTab, setActiveAdminTab] = useState<"products" | "posts">("products");
   const [postForm, setPostForm] = useState({ title: "", category: "Tool & Code", content: "" });
   const [editingPostId, setEditingPostId] = useState<number | string | null>(null);
   const [posts, setPosts] = useState<Array<{ id: number | string; title: string; category: string; content: string; created_at?: string }>>([]);
@@ -424,261 +425,288 @@ function AdminContent() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Doanh thu</p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <h2 className="text-3xl font-black tracking-tight">{formatMoney(revenue)}</h2>
-              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+18.2%</span>
-            </div>
-          </div>
-          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Đơn hàng</p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <h2 className="text-3xl font-black tracking-tight">{orders.length}</h2>
-              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+9.8%</span>
-            </div>
-          </div>
-          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Khách hàng</p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <h2 className="text-3xl font-black tracking-tight">8,490</h2>
-              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+12.4%</span>
-            </div>
-          </div>
-          <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Tỷ lệ chuyển đổi</p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <h2 className="text-3xl font-black tracking-tight">4.6%</h2>
-              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+0.9%</span>
-            </div>
-          </div>
+        <div className="mt-4 inline-flex rounded-full border border-slate-200 bg-white p-1 shadow-sm">
+          <button
+            type="button"
+            onClick={() => setActiveAdminTab("products")}
+            className={[
+              "rounded-full px-4 py-2 text-sm font-semibold transition",
+              activeAdminTab === "products" ? "bg-slate-900 text-white shadow-sm" : "text-slate-600 hover:text-slate-900",
+            ].join(" ")}
+          >
+            Quản lý Sản phẩm & Đơn hàng
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveAdminTab("posts")}
+            className={[
+              "rounded-full px-4 py-2 text-sm font-semibold transition",
+              activeAdminTab === "posts" ? "bg-slate-900 text-white shadow-sm" : "text-slate-600 hover:text-slate-900",
+            ].join(" ")}
+          >
+            Quản lý Bài viết chia sẻ
+          </button>
         </div>
 
-        <div className="mt-8 grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-          <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-2xl font-black">Đơn hàng gần đây</h2>
-              <button className="rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white">Xuất báo cáo</button>
+        {activeAdminTab === "products" ? (
+          <>
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <p className="text-sm text-slate-500">Doanh thu</p>
+                <div className="mt-3 flex items-end justify-between gap-3">
+                  <h2 className="text-3xl font-black tracking-tight">{formatMoney(revenue)}</h2>
+                  <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+18.2%</span>
+                </div>
+              </div>
+              <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <p className="text-sm text-slate-500">Đơn hàng</p>
+                <div className="mt-3 flex items-end justify-between gap-3">
+                  <h2 className="text-3xl font-black tracking-tight">{orders.length}</h2>
+                  <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+9.8%</span>
+                </div>
+              </div>
+              <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <p className="text-sm text-slate-500">Khách hàng</p>
+                <div className="mt-3 flex items-end justify-between gap-3">
+                  <h2 className="text-3xl font-black tracking-tight">8,490</h2>
+                  <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+12.4%</span>
+                </div>
+              </div>
+              <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+                <p className="text-sm text-slate-500">Tỷ lệ chuyển đổi</p>
+                <div className="mt-3 flex items-end justify-between gap-3">
+                  <h2 className="text-3xl font-black tracking-tight">4.6%</h2>
+                  <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700">+0.9%</span>
+                </div>
+              </div>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-200">
-              <table className="min-w-full text-left text-sm">
-                <thead className="bg-slate-100 text-slate-600">
-                  <tr>
-                    <th className="px-4 py-3 font-semibold">Mã đơn</th>
-                    <th className="px-4 py-3 font-semibold">Khách hàng</th>
-                    <th className="px-4 py-3 font-semibold">Tổng tiền</th>
-                    <th className="px-4 py-3 font-semibold">Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order.id} className="border-t border-slate-200">
-                      <td className="px-4 py-3 font-semibold text-slate-900">
-                        <Link href={`/orders/${order.id}`} className="text-slate-900 underline underline-offset-4 hover:text-orange-600">
-                          #{order.id}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3">{order.customerName}</td>
-                      <td className="px-4 py-3">{formatMoney(order.total)}</td>
-                      <td className="px-4 py-3">
-                        <select
-                          value={order.status}
-                          onChange={(event) => handleOrderStatusChange(order.id, event.target.value)}
-                          className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-700 outline-none"
-                        >
-                          <option value="Chờ xử lý">Chờ xử lý</option>
-                          <option value="Đang giao">Đang giao</option>
-                          <option value="Hoàn tất">Hoàn tất</option>
-                          <option value="Hủy">Hủy</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
+            <div className="mt-8 grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+              <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="mb-5 flex items-center justify-between">
+                  <h2 className="text-2xl font-black">Đơn hàng gần đây</h2>
+                  <button className="rounded-full bg-slate-900 px-3 py-2 text-xs font-semibold text-white">Xuất báo cáo</button>
+                </div>
 
-          <aside className="space-y-6">
-            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-black">Sản phẩm sắp hết</h2>
-              <div className="mt-5 space-y-4">
-                {lowStock.map((item) => (
-                  <div key={item.name} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-bold text-slate-900">{item.name}</p>
-                      <span className="rounded-full bg-rose-100 px-2 py-1 text-xs font-bold text-rose-700">{item.stock} còn</span>
-                    </div>
-                    <div className="mt-3 h-2.5 rounded-full bg-slate-200">
-                      <div className="h-2.5 rounded-full bg-orange-500" style={{ width: `${Math.min((item.stock / 20) * 100, 100)}%` }} />
-                    </div>
+                <div className="overflow-hidden rounded-2xl border border-slate-200">
+                  <table className="min-w-full text-left text-sm">
+                    <thead className="bg-slate-100 text-slate-600">
+                      <tr>
+                        <th className="px-4 py-3 font-semibold">Mã đơn</th>
+                        <th className="px-4 py-3 font-semibold">Khách hàng</th>
+                        <th className="px-4 py-3 font-semibold">Tổng tiền</th>
+                        <th className="px-4 py-3 font-semibold">Trạng thái</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map((order) => (
+                        <tr key={order.id} className="border-t border-slate-200">
+                          <td className="px-4 py-3 font-semibold text-slate-900">
+                            <Link href={`/orders/${order.id}`} className="text-slate-900 underline underline-offset-4 hover:text-orange-600">
+                              #{order.id}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-3">{order.customerName}</td>
+                          <td className="px-4 py-3">{formatMoney(order.total)}</td>
+                          <td className="px-4 py-3">
+                            <select
+                              value={order.status}
+                              onChange={(event) => handleOrderStatusChange(order.id, event.target.value)}
+                              className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-700 outline-none"
+                            >
+                              <option value="Chờ xử lý">Chờ xử lý</option>
+                              <option value="Đang giao">Đang giao</option>
+                              <option value="Hoàn tất">Hoàn tất</option>
+                              <option value="Hủy">Hủy</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <aside className="space-y-6">
+                <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+                  <h2 className="text-2xl font-black">Sản phẩm sắp hết</h2>
+                  <div className="mt-5 space-y-4">
+                    {lowStock.map((item) => (
+                      <div key={item.name} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="font-bold text-slate-900">{item.name}</p>
+                          <span className="rounded-full bg-rose-100 px-2 py-1 text-xs font-bold text-rose-700">{item.stock} còn</span>
+                        </div>
+                        <div className="mt-3 h-2.5 rounded-full bg-slate-200">
+                          <div className="h-2.5 rounded-full bg-orange-500" style={{ width: `${Math.min((item.stock / 20) * 100, 100)}%` }} />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-black">Quản lý sản phẩm</h2>
-
-              <form onSubmit={handleSubmitProduct} className="mt-4 space-y-3">
-                <input
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  placeholder="Tên sản phẩm"
-                  value={form.name}
-                  onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                />
-                <div className="grid grid-cols-2 gap-3">
-                  <input
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                    placeholder="Giá"
-                    inputMode="numeric"
-                    value={form.price}
-                    onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))}
-                  />
-                  <input
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                    placeholder="Tồn kho"
-                    inputMode="numeric"
-                    value={form.stock}
-                    onChange={(event) => setForm((current) => ({ ...current, stock: event.target.value }))}
-                  />
                 </div>
-                <select
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  value={form.category || ""}
-                  onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}
-                >
-                  <option value="">-- Chọn danh mục --</option>
-                  {categories?.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-                <textarea
-                  className="min-h-[80px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  placeholder="Mô tả"
-                  value={form.description}
-                  onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-                />
-                {error ? <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{error}</div> : null}
-                <div className="flex gap-2">
-                  <button type="submit" disabled={saving} className="flex-1 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
-                    {saving ? "Đang lưu..." : editingProductId ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
-                  </button>
-                  {editingProductId ? (
-                    <button type="button" onClick={resetForm} className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700">
-                      Hủy
-                    </button>
-                  ) : null}
-                </div>
-              </form>
 
-              <div className="mt-5 space-y-3">
-                {liveProducts.length === 0 ? (
-                  <p className="text-sm text-slate-500">Đang tải dữ liệu sản phẩm...</p>
-                ) : (
-                  liveProducts.map((product) => (
-                    <div key={product.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="truncate font-bold text-slate-900">{product.name}</p>
-                          <span className="mt-1 inline-flex rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-700">
-                            {product.category}
-                          </span>
-                        </div>
-                        <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">{product.stock} còn</span>
-                      </div>
-                      <div className="mt-2 flex items-center justify-between gap-3">
-                        <span className="text-sm font-semibold text-slate-700">{formatMoney(product.price)}</span>
-                        <div className="flex gap-2">
-                          <button onClick={() => handleEditProduct(product)} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700">
-                            Sửa
-                          </button>
-                          <button onClick={() => handleDeleteProduct(product.id)} className="rounded-full border border-rose-200 bg-white px-2.5 py-1 text-[10px] font-bold text-rose-700">
-                            Xóa
-                          </button>
-                        </div>
-                      </div>
+                <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+                  <h2 className="text-2xl font-black">Quản lý sản phẩm</h2>
+
+                  <form onSubmit={handleSubmitProduct} className="mt-4 space-y-3">
+                    <input
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                      placeholder="Tên sản phẩm"
+                      value={form.name}
+                      onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                        placeholder="Giá"
+                        inputMode="numeric"
+                        value={form.price}
+                        onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))}
+                      />
+                      <input
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                        placeholder="Tồn kho"
+                        inputMode="numeric"
+                        value={form.stock}
+                        onChange={(event) => setForm((current) => ({ ...current, stock: event.target.value }))}
+                      />
                     </div>
-                  ))
-                )}
-              </div>
-            </div>
+                    <select
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                      value={form.category || ""}
+                      onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))}
+                    >
+                      <option value="">-- Chọn danh mục --</option>
+                      {categories?.map((category) => (
+                        <option key={category.id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    <textarea
+                      className="min-h-[80px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                      placeholder="Mô tả"
+                      value={form.description}
+                      onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
+                    />
+                    {error ? <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{error}</div> : null}
+                    <div className="flex gap-2">
+                      <button type="submit" disabled={saving} className="flex-1 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
+                        {saving ? "Đang lưu..." : editingProductId ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
+                      </button>
+                      {editingProductId ? (
+                        <button type="button" onClick={resetForm} className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700">
+                          Hủy
+                        </button>
+                      ) : null}
+                    </div>
+                  </form>
 
-            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-black">Quản lý bài viết</h2>
-
-              <form onSubmit={handleSavePost} className="mt-4 space-y-3">
-                <input
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  placeholder="Tiêu đề bài viết"
-                  value={postForm.title}
-                  onChange={(event) => setPostForm((current) => ({ ...current, title: event.target.value }))}
-                />
-                <select
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  value={postForm.category}
-                  onChange={(event) => setPostForm((current) => ({ ...current, category: event.target.value }))}
-                >
-                  <option value="Tool & Code">Tool & Code</option>
-                  <option value="Bài viết chia sẻ">Bài viết chia sẻ</option>
-                  <option value="Khuyến mãi">Khuyến mãi</option>
-                </select>
-                <textarea
-                  className="min-h-[120px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
-                  placeholder="Nội dung bài viết"
-                  value={postForm.content}
-                  onChange={(event) => setPostForm((current) => ({ ...current, content: event.target.value }))}
-                />
-                {postNotice ? <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">{postNotice}</div> : null}
-                <div className="flex gap-2">
-                  <button type="submit" disabled={postSaving} className="flex-1 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
-                    {postSaving ? "Đang lưu..." : editingPostId ? "Cập nhật bài viết" : "Thêm bài viết"}
-                  </button>
-                  {editingPostId ? (
-                    <button type="button" onClick={resetPostForm} className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700">
-                      Hủy
-                    </button>
-                  ) : null}
-                </div>
-              </form>
-
-              <div className="mt-5 space-y-3">
-                {posts.length === 0 ? (
-                  <p className="text-sm text-slate-500">Chưa có bài viết nào trong Supabase.</p>
-                ) : (
-                  posts.map((post) => (
-                    <div key={String(post.id)} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="truncate font-bold text-slate-900">{post.title}</p>
-                          <span className="mt-1 inline-flex rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-700">
-                            {post.category}
-                          </span>
+                  <div className="mt-5 space-y-3">
+                    {liveProducts.length === 0 ? (
+                      <p className="text-sm text-slate-500">Đang tải dữ liệu sản phẩm...</p>
+                    ) : (
+                      liveProducts.map((product) => (
+                        <div key={product.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="truncate font-bold text-slate-900">{product.name}</p>
+                              <span className="mt-1 inline-flex rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-700">
+                                {product.category}
+                              </span>
+                            </div>
+                            <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">{product.stock} còn</span>
+                          </div>
+                          <div className="mt-2 flex items-center justify-between gap-3">
+                            <span className="text-sm font-semibold text-slate-700">{formatMoney(product.price)}</span>
+                            <div className="flex gap-2">
+                              <button onClick={() => handleEditProduct(product)} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700">
+                                Sửa
+                              </button>
+                              <button onClick={() => handleDeleteProduct(product.id)} className="rounded-full border border-rose-200 bg-white px-2.5 py-1 text-[10px] font-bold text-rose-700">
+                                Xóa
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">
-                          {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "Mới"}
+                      ))
+                    )}
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </>
+        ) : (
+          <div className="mt-6 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-2xl font-black">Quản lý bài viết</h2>
+
+            <form onSubmit={handleSavePost} className="mt-4 space-y-3">
+              <input
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                placeholder="Tiêu đề bài viết"
+                value={postForm.title}
+                onChange={(event) => setPostForm((current) => ({ ...current, title: event.target.value }))}
+              />
+              <select
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                value={postForm.category}
+                onChange={(event) => setPostForm((current) => ({ ...current, category: event.target.value }))}
+              >
+                <option value="Tool & Code">Tool & Code</option>
+                <option value="Bài viết chia sẻ">Bài viết chia sẻ</option>
+                <option value="Khuyến mãi">Khuyến mãi</option>
+              </select>
+              <textarea
+                className="min-h-[120px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                placeholder="Nội dung bài viết"
+                value={postForm.content}
+                onChange={(event) => setPostForm((current) => ({ ...current, content: event.target.value }))}
+              />
+              {postNotice ? <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">{postNotice}</div> : null}
+              <div className="flex gap-2">
+                <button type="submit" disabled={postSaving} className="flex-1 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
+                  {postSaving ? "Đang lưu..." : editingPostId ? "Cập nhật bài viết" : "Thêm bài viết"}
+                </button>
+                {editingPostId ? (
+                  <button type="button" onClick={resetPostForm} className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700">
+                    Hủy
+                  </button>
+                ) : null}
+              </div>
+            </form>
+
+            <div className="mt-5 space-y-3">
+              {posts.length === 0 ? (
+                <p className="text-sm text-slate-500">Chưa có bài viết nào trong Supabase.</p>
+              ) : (
+                posts.map((post) => (
+                  <div key={String(post.id)} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-bold text-slate-900">{post.title}</p>
+                        <span className="mt-1 inline-flex rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-700">
+                          {post.category}
                         </span>
                       </div>
-                      <div className="mt-2 text-sm text-slate-600 line-clamp-3">{post.content}</div>
-                      <div className="mt-2 flex gap-2">
-                        <button onClick={() => handleEditPost(post)} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700">
-                          Sửa
-                        </button>
-                        <button onClick={() => handleDeletePost(post.id)} className="rounded-full border border-rose-200 bg-white px-2.5 py-1 text-[10px] font-bold text-rose-700">
-                          Xóa
-                        </button>
-                      </div>
+                      <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">
+                        {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "Mới"}
+                      </span>
                     </div>
-                  ))
-                )}
-              </div>
+                    <div className="mt-2 text-sm text-slate-600 line-clamp-3">{post.content}</div>
+                    <div className="mt-2 flex gap-2">
+                      <button onClick={() => handleEditPost(post)} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700">
+                        Sửa
+                      </button>
+                      <button onClick={() => handleDeletePost(post.id)} className="rounded-full border border-rose-200 bg-white px-2.5 py-1 text-[10px] font-bold text-rose-700">
+                        Xóa
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
-          </aside>
-        </div>
+          </div>
+        )}
       </div>
     </main>
   );
