@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 const tabs = [
   "Tất cả",
@@ -15,64 +16,58 @@ type Post = {
   id: number;
   title: string;
   category: PostCategory;
-  description: string;
-  date: string;
+  content: string;
+  created_at?: string;
 };
-
-const posts: Post[] = [
-  {
-    id: 1,
-    title: "Top 10 tool AI hỗ trợ viết code hiệu quả",
-    category: "Tool & Code",
-    description: "Khám phá các công cụ AI giúp tăng tốc độ coding, tối ưu workflow và cải thiện chất lượng sản phẩm.",
-    date: "15/08/2026",
-  },
-  {
-    id: 2,
-    title: "Cách tối ưu landing page bán hàng bằng Next.js",
-    category: "Bài viết chia sẻ",
-    description: "Hướng dẫn cách cấu trúc landing page, tối ưu tốc độ và tăng tỷ lệ chuyển đổi cho storefront.",
-    date: "09/08/2026",
-  },
-  {
-    id: 3,
-    title: "Khuyến mãi mùa hè: Giảm giá lên đến 40%",
-    category: "Khuyến mãi",
-    description: "Danh sách ưu đãi hot trong tháng, giúp bạn tiết kiệm chi phí và cập nhật sản phẩm mới nhanh hơn.",
-    date: "01/08/2026",
-  },
-  {
-    id: 4,
-    title: "Template UI React tối ưu cho e-commerce",
-    category: "Tool & Code",
-    description: "Một bộ mẫu giao diện hiện đại, dễ mở rộng và phù hợp với các hệ thống thương mại điện tử.",
-    date: "28/07/2026",
-  },
-  {
-    id: 5,
-    title: "Kinh nghiệm xây dựng nội dung content marketing cho thương hiệu nhỏ",
-    category: "Bài viết chia sẻ",
-    description: "Cách lên kế hoạch nội dung, xây dựng brand voice và nuôi lượng người đọc bền vững.",
-    date: "20/07/2026",
-  },
-  {
-    id: 6,
-    title: "Flash sale cuối tuần: combo tool + khóa học",
-    category: "Khuyến mãi",
-    description: "Ưu đãi đặc biệt dành cho khách hàng mua gói combo công cụ và tài liệu hướng dẫn chuyên sâu.",
-    date: "12/07/2026",
-  },
-];
 
 export default function PostsPage() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Tất cả");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        if (!supabase) {
+          setPosts([]);
+          setIsLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase.from("posts").select("*\n").order("created_at", { ascending: false });
+
+        if (error) {
+          throw error;
+        }
+
+        const mappedPosts: Post[] = Array.isArray(data)
+          ? data.map((post) => ({
+              id: Number(post.id),
+              title: String(post.title ?? "Untitled"),
+              category: (post.category as PostCategory) ?? "Bài viết chia sẻ",
+              content: String(post.content ?? ""),
+              created_at: post.created_at ?? undefined,
+            }))
+          : [];
+
+        setPosts(mappedPosts);
+      } catch (loadError) {
+        console.error("Failed to fetch posts:", loadError);
+        setError("Không thể tải bài viết lúc này. Vui lòng thử lại sau.");
+        setPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, []);
 
   const filteredPosts = useMemo(() => {
-    if (activeTab === "Tất cả") return posts;
-    return posts.filter((post) => post.category === activeTab);
-  }, [activeTab]);
-
-  const isLoading = false;
+    const postList = activeTab === "Tất cả" ? posts : posts.filter((post) => post.category === activeTab);
+    return postList;
+  }, [activeTab, posts]);
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -110,7 +105,9 @@ export default function PostsPage() {
           </div>
         </div>
 
-        {isLoading ? (
+        {error ? (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
+        ) : isLoading ? (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
@@ -140,14 +137,16 @@ export default function PostsPage() {
                   <span className="inline-flex rounded-full bg-teal-100 px-2.5 py-1 text-xs font-semibold text-teal-700">
                     {post.category}
                   </span>
-                  <span className="text-xs font-medium text-slate-500">{post.date}</span>
+                  <span className="text-xs font-medium text-slate-500">
+                    {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "Mới"}
+                  </span>
                 </div>
 
                 <h2 className="mb-3 text-xl font-bold tracking-tight text-slate-900 group-hover:text-teal-700">
                   {post.title}
                 </h2>
 
-                <p className="text-sm leading-6 text-slate-600">{post.description}</p>
+                <p className="text-sm leading-6 text-slate-600">{post.content}</p>
 
                 <div className="mt-5">
                   <button

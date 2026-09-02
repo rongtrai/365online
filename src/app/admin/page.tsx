@@ -60,6 +60,11 @@ function AdminContent() {
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [postForm, setPostForm] = useState({ title: "", category: "Tool & Code", content: "" });
+  const [editingPostId, setEditingPostId] = useState<number | string | null>(null);
+  const [posts, setPosts] = useState<Array<{ id: number | string; title: string; category: string; content: string; created_at?: string }>>([]);
+  const [postSaving, setPostSaving] = useState(false);
+  const [postNotice, setPostNotice] = useState("");
 
   useEffect(() => {
     setIsMounted(true);
@@ -195,6 +200,30 @@ function AdminContent() {
 
     checkAccess();
     loadData();
+
+    const loadPosts = async () => {
+      try {
+        if (!supabase) {
+          setPosts([]);
+          return;
+        }
+
+        const { data, error } = await supabase.from("posts").select("*").order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching posts:", error);
+          setPosts([]);
+          return;
+        }
+
+        setPosts(Array.isArray(data) ? data : []);
+      } catch (postError) {
+        console.error("Failed to fetch posts:", postError);
+        setPosts([]);
+      }
+    };
+
+    loadPosts();
   }, [isMounted, router]);
 
   const handleLogout = () => {
@@ -208,6 +237,72 @@ function AdminContent() {
   const resetForm = () => {
     setForm({ name: "", price: "", stock: "", category: "Robot, Mô hình", description: "" });
     setEditingProductId(null);
+  };
+
+  const resetPostForm = () => {
+    setPostForm({ title: "", category: "Tool & Code", content: "" });
+    setEditingPostId(null);
+  };
+
+  const handleSavePost = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPostSaving(true);
+    setPostNotice("");
+
+    try {
+      if (!supabase) {
+        throw new Error("Supabase chưa được cấu hình.");
+      }
+
+      const payload = {
+        title: postForm.title,
+        category: postForm.category,
+        content: postForm.content,
+      };
+
+      if (editingPostId) {
+        const { error } = await supabase.from("posts").update(payload).eq("id", editingPostId);
+        if (error) throw error;
+        setPostNotice("Đã cập nhật bài viết thành công.");
+      } else {
+        const { error } = await supabase.from("posts").insert(payload);
+        if (error) throw error;
+        setPostNotice("Đã tạo bài viết thành công.");
+      }
+
+      const { data, error: fetchError } = await supabase.from("posts").select("*").order("created_at", { ascending: false });
+      if (fetchError) throw fetchError;
+      setPosts(Array.isArray(data) ? data : []);
+      resetPostForm();
+    } catch (postError) {
+      setPostNotice(postError instanceof Error ? postError.message : "Không thể lưu bài viết.");
+    } finally {
+      setPostSaving(false);
+    }
+  };
+
+  const handleEditPost = (post: { id: number | string; title: string; category: string; content: string }) => {
+    setEditingPostId(post.id);
+    setPostForm({ title: post.title, category: post.category, content: post.content });
+  };
+
+  const handleDeletePost = async (postId: number | string) => {
+    try {
+      if (!supabase) {
+        throw new Error("Supabase chưa được cấu hình.");
+      }
+
+      const { error } = await supabase.from("posts").delete().eq("id", postId);
+      if (error) throw error;
+
+      setPosts((current) => current.filter((post) => post.id !== postId));
+      setPostNotice("Đã xóa bài viết thành công.");
+      if (editingPostId === postId) {
+        resetPostForm();
+      }
+    } catch (postError) {
+      setPostNotice(postError instanceof Error ? postError.message : "Không thể xóa bài viết.");
+    }
   };
 
   const handleSubmitProduct = async (event: FormEvent<HTMLFormElement>) => {
@@ -506,6 +601,76 @@ function AdminContent() {
                             Xóa
                           </button>
                         </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-2xl font-black">Quản lý bài viết</h2>
+
+              <form onSubmit={handleSavePost} className="mt-4 space-y-3">
+                <input
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                  placeholder="Tiêu đề bài viết"
+                  value={postForm.title}
+                  onChange={(event) => setPostForm((current) => ({ ...current, title: event.target.value }))}
+                />
+                <select
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                  value={postForm.category}
+                  onChange={(event) => setPostForm((current) => ({ ...current, category: event.target.value }))}
+                >
+                  <option value="Tool & Code">Tool & Code</option>
+                  <option value="Bài viết chia sẻ">Bài viết chia sẻ</option>
+                  <option value="Khuyến mãi">Khuyến mãi</option>
+                </select>
+                <textarea
+                  className="min-h-[120px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
+                  placeholder="Nội dung bài viết"
+                  value={postForm.content}
+                  onChange={(event) => setPostForm((current) => ({ ...current, content: event.target.value }))}
+                />
+                {postNotice ? <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">{postNotice}</div> : null}
+                <div className="flex gap-2">
+                  <button type="submit" disabled={postSaving} className="flex-1 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60">
+                    {postSaving ? "Đang lưu..." : editingPostId ? "Cập nhật bài viết" : "Thêm bài viết"}
+                  </button>
+                  {editingPostId ? (
+                    <button type="button" onClick={resetPostForm} className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700">
+                      Hủy
+                    </button>
+                  ) : null}
+                </div>
+              </form>
+
+              <div className="mt-5 space-y-3">
+                {posts.length === 0 ? (
+                  <p className="text-sm text-slate-500">Chưa có bài viết nào trong Supabase.</p>
+                ) : (
+                  posts.map((post) => (
+                    <div key={String(post.id)} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate font-bold text-slate-900">{post.title}</p>
+                          <span className="mt-1 inline-flex rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-700">
+                            {post.category}
+                          </span>
+                        </div>
+                        <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700">
+                          {post.created_at ? new Date(post.created_at).toLocaleDateString("vi-VN") : "Mới"}
+                        </span>
+                      </div>
+                      <div className="mt-2 text-sm text-slate-600 line-clamp-3">{post.content}</div>
+                      <div className="mt-2 flex gap-2">
+                        <button onClick={() => handleEditPost(post)} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700">
+                          Sửa
+                        </button>
+                        <button onClick={() => handleDeletePost(post.id)} className="rounded-full border border-rose-200 bg-white px-2.5 py-1 text-[10px] font-bold text-rose-700">
+                          Xóa
+                        </button>
                       </div>
                     </div>
                   ))
