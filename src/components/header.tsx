@@ -132,13 +132,13 @@ export default function Header() {
             <a href="/" className="transition hover:text-teal-100">
               Cửa hàng
             </a>
-            <a href="/tools" className="transition hover:text-teal-100">
+            <a href="/posts?category=Tool%20%26%20Code" className="transition hover:text-teal-100">
               Tool, Code, Phần mềm
             </a>
-            <a href="/posts" className="transition hover:text-teal-100">
+            <a href="/posts?category=B%C3%A0i%20vi%E1%BA%BFt%20chia%20s%E1%BA%BB" className="transition hover:text-teal-100">
               Bài viết chia sẻ
             </a>
-            <a href="/promotions" className="transition hover:text-teal-100">
+            <a href="/posts?category=Khuy%E1%BA%BFn%20m%C3%A3i" className="transition hover:text-teal-100">
               Khuyến mãi
             </a>
           </div>
