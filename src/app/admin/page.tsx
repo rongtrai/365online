@@ -61,11 +61,12 @@ function AdminContent() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [activeAdminTab, setActiveAdminTab] = useState<"products" | "posts">("products");
-  const [postForm, setPostForm] = useState({ title: "", category: "Tool & Code", content: "" });
+  const [postForm, setPostForm] = useState({ title: "", category: "Tool & Code", content: "", cover_url: "" });
   const [editingPostId, setEditingPostId] = useState<number | string | null>(null);
   const [posts, setPosts] = useState<Array<{ id: number | string; title: string; category: string; content: string; created_at?: string }>>([]);
   const [postSaving, setPostSaving] = useState(false);
   const [postNotice, setPostNotice] = useState("");
+  const [postImageUploading, setPostImageUploading] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -241,8 +242,43 @@ function AdminContent() {
   };
 
   const resetPostForm = () => {
-    setPostForm({ title: "", category: "Tool & Code", content: "" });
+    setPostForm({ title: "", category: "Tool & Code", content: "", cover_url: "" });
     setEditingPostId(null);
+  };
+
+  const handlePostImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !supabase) return;
+
+    setPostImageUploading(true);
+    setPostNotice("");
+    try {
+      const filePath = `posts/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "-")}`;
+      const { error: uploadError } = await supabase.storage.from("blog-images").upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("blog-images").getPublicUrl(filePath);
+      setPostForm((current) => ({ ...current, cover_url: data.publicUrl }));
+    } catch (uploadError) {
+      setPostNotice(uploadError instanceof Error ? uploadError.message : "Không thể tải ảnh lên.");
+    } finally {
+      setPostImageUploading(false);
+      event.target.value = "";
+    }
+  };
+
+  const applyPostFormat = (prefix: string, suffix = "") => {
+    const textarea = document.querySelector<HTMLTextAreaElement>("[data-post-editor]");
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = postForm.content.slice(start, end) || "Nội dung";
+    const nextContent = `${postForm.content.slice(0, start)}${prefix}${selectedText}${suffix}${postForm.content.slice(end)}`;
+    setPostForm((current) => ({ ...current, content: nextContent }));
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+    });
   };
 
   const handleSavePost = async (event: FormEvent<HTMLFormElement>) => {
@@ -259,6 +295,7 @@ function AdminContent() {
         title: postForm.title,
         category: postForm.category,
         content: postForm.content,
+        cover_url: postForm.cover_url,
       };
 
       if (editingPostId) {
@@ -284,7 +321,7 @@ function AdminContent() {
 
   const handleEditPost = (post: { id: number | string; title: string; category: string; content: string }) => {
     setEditingPostId(post.id);
-    setPostForm({ title: post.title, category: post.category, content: post.content });
+    setPostForm({ title: post.title, category: post.category, content: post.content, cover_url: "cover_url" in post ? String(post.cover_url ?? "") : "" });
   };
 
   const handleDeletePost = async (postId: number | string) => {
@@ -656,7 +693,39 @@ function AdminContent() {
                 <option value="Bài viết chia sẻ">Bài viết chia sẻ</option>
                 <option value="Khuyến mãi">Khuyến mãi</option>
               </select>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                <label className="block text-xs font-semibold text-slate-600">Ảnh đại diện bài viết</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePostImageUpload}
+                  disabled={postImageUploading}
+                  className="mt-2 block w-full text-xs text-slate-500 file:mr-3 file:rounded-full file:border-0 file:bg-slate-900 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white"
+                />
+                {postImageUploading ? <p className="mt-2 text-xs text-slate-500">Đang tải ảnh lên...</p> : null}
+                {postForm.cover_url ? (
+                  <img src={postForm.cover_url} alt="Xem trước ảnh bài viết" className="mt-3 h-24 w-40 rounded-xl object-cover" />
+                ) : null}
+              </div>
+              <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-2">
+                <button type="button" onClick={() => applyPostFormat("**", "**")} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-slate-700 hover:border-orange-300">B</button>
+                <button type="button" onClick={() => applyPostFormat("*", "*")} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm italic text-slate-700 hover:border-orange-300">I</button>
+                <button type="button" onClick={() => applyPostFormat("## ")} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-orange-300">H2</button>
+                <button type="button" onClick={() => applyPostFormat("- ")} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-orange-300">Danh sách</button>
+                <button type="button" onClick={() => applyPostFormat("> ")} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-orange-300">Trích dẫn</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const imageUrl = window.prompt("Nhập URL ảnh");
+                    if (imageUrl) applyPostFormat(`![Mô tả ảnh](${imageUrl})`);
+                  }}
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-orange-300"
+                >
+                  Ảnh URL
+                </button>
+              </div>
               <textarea
+                data-post-editor
                 className="min-h-[120px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-orange-400"
                 placeholder="Nội dung bài viết"
                 value={postForm.content}
