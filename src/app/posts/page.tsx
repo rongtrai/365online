@@ -14,7 +14,7 @@ type Post = {
   created_at?: string;
 };
 
-export default function PostsPage() {
+function PostsContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
   const [posts, setPosts] = useState<Post[]>([]);
@@ -150,5 +150,13 @@ export default function PostsPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function PostsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Đang tải bài viết...</div>}>
+      <PostsContent />
+    </Suspense>
   );
 }
