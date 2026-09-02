@@ -1,5 +1,8 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
@@ -65,6 +68,8 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const checkAccess = async () => {
       if (isSupabaseConfigured && supabase) {
         const { data } = await supabase.auth.getSession();
@@ -163,7 +168,7 @@ export default function AdminPage() {
 
     checkAccess();
     loadData();
-  }, [router]);
+  }, [mounted, router]);
 
   const handleLogout = () => {
     if (isSupabaseConfigured && supabase) {
@@ -273,12 +278,9 @@ export default function AdminPage() {
 
   if (!mounted || !isLoggedIn) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-6 shadow-sm">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-teal-600" />
-          <p className="text-sm font-medium text-slate-600">Đang kiểm tra quyền truy cập...</p>
-        </div>
-      </main>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-orange-500" />
+      </div>
     );
   }
 
