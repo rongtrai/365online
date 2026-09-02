@@ -63,10 +63,6 @@ export default function Header() {
     };
   }, []);
 
-  if (pathname?.startsWith("/admin")) {
-    return null;
-  }
-
   return (
     <header className="sticky top-0 z-50 border-b border-teal-500/20 bg-teal-800 text-white shadow-sm backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
