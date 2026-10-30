@@ -26,6 +26,7 @@ export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const addToCart = useCartStore((state) => state.addItem);
+  const cartItems = useCartStore((state) => state.items);
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<ProductDetail[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,6 +78,7 @@ export default function ProductDetailPage() {
   };
 
   const productImageUrl = product?.imageUrl || product?.image_url || "";
+  const isInCart = product ? cartItems.some((item) => item.id === product.id) : false;
 
   if (loading) {
     return <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900"><div className="mx-auto max-w-6xl rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-sm">Đang tải sản phẩm...</div></main>;
@@ -155,7 +157,7 @@ export default function ProductDetailPage() {
 
             <div className="mt-6 flex flex-wrap gap-3">
               <button onClick={handleAddToCart} className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white">
-                Thêm vào giỏ
+                {isInCart ? "Đã trong giỏ" : "Thêm vào giỏ"}
               </button>
               <button onClick={() => { handleAddToCart(); router.push("/checkout"); }} className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700">
                 Mua ngay
