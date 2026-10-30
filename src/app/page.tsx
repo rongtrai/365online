@@ -196,10 +196,24 @@ export default function Home() {
   const wishlistIds = useShopStore((state) => state.wishlistIds);
   const toggleWishlist = useShopStore((state) => state.toggleWishlist);
   const addToCart = useCartStore((state) => state.addItem);
+  const [addedProductId, setAddedProductId] = useState<number | null>(null);
   const [categories, setCategories] = useState<Array<{ name: string; count: number; accent: string }>>([]);
   const [toolPosts, setToolPosts] = useState<Array<{ id: number; title: string; category: string; content: string; created_at?: string }>>([]);
   const [toolPostsLoading, setToolPostsLoading] = useState(true);
   const [toolPostsError, setToolPostsError] = useState("");
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      badge: product.badge,
+      accent: product.accent,
+      category: "Robot, Mô hình",
+    });
+    setAddedProductId(product.id);
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -483,19 +497,11 @@ export default function Home() {
                               onClick={(event) => {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                addToCart({
-                                  id: product.id,
-                                  name: product.name,
-                                  price: product.price,
-                                  originalPrice: product.originalPrice,
-                                  badge: product.badge,
-                                  accent: product.accent,
-                                  category: "Robot, Mô hình",
-                                });
+                                handleAddToCart(product);
                               }}
                               className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
                             >
-                              Thêm vào giỏ
+                              {addedProductId === product.id ? "Đã thêm" : "Thêm vào giỏ"}
                             </button>
                           </div>
                         </div>
@@ -572,19 +578,11 @@ export default function Home() {
                               onClick={(event) => {
                                 event.preventDefault();
                                 event.stopPropagation();
-                                addToCart({
-                                  id: product.id,
-                                  name: product.name,
-                                  price: product.price,
-                                  originalPrice: product.originalPrice,
-                                  badge: product.badge,
-                                  accent: product.accent,
-                                  category: "Robot, Mô hình",
-                                });
+                                handleAddToCart(product);
                               }}
                               className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-slate-900 px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-slate-800"
                             >
-                              Thêm vào giỏ
+                              {addedProductId === product.id ? "Đã thêm" : "Thêm vào giỏ"}
                             </button>
                           </div>
                         </div>
